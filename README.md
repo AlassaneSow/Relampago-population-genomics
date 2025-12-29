@@ -6,7 +6,7 @@ Code used for genome assembly and population structure, ecological, and evolutio
 use aaftf 
 
 # Generate SNP dataset
-HaplotypeCaller, GatherVCFs and JointGenotyper 
+Used GATK best practice workflow HaplotypeCaller, GatherVCFs and JointGenotyper 
 
 # PCA and STRUCTURE 
 
