@@ -12,11 +12,11 @@ pixy --stats pi fst dxy tajima_d \
 ``  
 # Genic diversity indicies
 We found it important to calculate these statistics for only genic regions as well. In order to do so we created a bed file of all genic regions in each alignment by filtering the GTF file to only include genes  
-``
-``
+``  
+``  
 and then retaining only the chromosome ID, start, and end and converting to bed format  
-``
-``
+``  
+``  
 We then calculated the statistics as follows
 ``
 pixy --stats pi fst dxy tajima_d \
