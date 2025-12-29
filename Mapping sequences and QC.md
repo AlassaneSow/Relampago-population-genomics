@@ -16,7 +16,7 @@ We then converted the sam files to bams using ```sambamba```
 We assesed mapping quality and filtered reads using ```sambamba```  
 ``
 ``  
-Mapping statistics after fultering 
+Mapping statistics after filtering   
 ``
 ``  
 Estimate mean coverage of each individual using ```bedtools```  
