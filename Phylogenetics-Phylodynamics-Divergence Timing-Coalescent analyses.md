@@ -1,5 +1,5 @@
 ## Phylogenetic trees (Chow)  
-Required files 
+# Required files 
 FASTA alignment with name up to 256 charcters long. To align WGS with SNP data, use
 Construct ML phylogenies using ```RAxML v8.0``` using GTRCAT nucleotide substitution model and boostrap based on 1,000 replicates. 
 
