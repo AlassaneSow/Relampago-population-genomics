@@ -1,9 +1,10 @@
 ## Phylogenetic trees (Chow)  
-# Required files 
-FASTA alignment with name up to 256 charcters long. To align WGS with SNP data, use
+### Required files 
+FASTA alignment with name up to 256 charcters long. To align WGS with SNP data, use   
+
 Construct ML phylogenies using ```RAxML v8.0``` using GTRCAT nucleotide substitution model and boostrap based on 1,000 replicates. 
 
-#M aximum clade credibility phylogenetic tree using BEAST (Chow)  
+## Maximum clade credibility phylogenetic tree using BEAST (Chow)  
 First we need to estimate a mutation rate for each clade using TempEst
 ``  
 ``  
