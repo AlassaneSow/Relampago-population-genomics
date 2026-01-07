@@ -7,7 +7,7 @@ Reference - Reference genome
 First need to call variants using GATK ```HaplotypeCaller```  
 
 ``  
-module load gatk  
+module load gatk  add line breaks
 gatk Haplotypecaller \  
 -R /path_to_reference \  
 -L /path_to_reads  
