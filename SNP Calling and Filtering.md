@@ -4,13 +4,14 @@
 Input - BAM file containing reads 
 Reference - Reference genome 
 
-First need to call variants using GATK ```HaplotypeCaller```
-``
-module load gatk
-gatk Haplotypecaller \   
--R /path_to_reference \  
--L /path_to_reads
-``
+First need to call variants using GATK ```HaplotypeCaller```  
+
+``  
+module load gatk  
+gatk Haplotypecaller \     
+-R /path_to_reference \    
+-L /path_to_reads  
+``  
 
 Then we need to combine the gVCF files from HaplotypeCaller into one VCF using ```CombineGVCFs``` 
 
