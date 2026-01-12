@@ -7,10 +7,11 @@ Reference - Reference genome
 First need to call variants using GATK ```HaplotypeCaller```  
 
 ``  
-module load gatk  add line breaks
-gatk Haplotypecaller \  
--R /path_to_reference \  
--L /path_to_reads  
+module load gatk <br />
+
+gatk Haplotypecaller \  <br />
+-R /path_to_reference \  <br />
+-L /path_to_reads  <br />
 ``  
 Then we need to combine the gVCF files from HaplotypeCaller into one VCF using ```CombineGVCFs``` 
 
