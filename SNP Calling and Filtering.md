@@ -19,7 +19,8 @@ Run ```HaplotypeCaller```
 gatk Haplotypecaller \   
 -R /path_to_reference \  
 -L /path_to_mapped_reads \
---sample-ploidy 1 \ 
+--sample-ploidy 1 \  
+-ERC GVCF \  
 -O /path_to_output_gvcf folder
 ```    
 Then we need to combine the gVCF files from HaplotypeCaller into one VCF using ```CombineGVCFs```   
