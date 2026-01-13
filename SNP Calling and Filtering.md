@@ -27,21 +27,28 @@ gatk HaplotypeCaller \
 -ERC GVCF \  
 -O $OUT/${SAMPLE}.g.vcf.gz
 ```    
-Then we need to combine the gVCF files from HaplotypeCaller into one VCF using ```GenomicsDBImport```
-
+Then we need to combine the gVCF files from HaplotypeCaller into one VCF using ```GenomicsDBImport```  
 ```
 gatk GenomicsDBImport \
--R ref
-
-```
-```
-gatk CombineGVCFs \
 -R /path_to_reference \
-$(for f in /path_to_output_gvcf; do echo "--variant $f"; done) \ \ #this loops through all the vcf files and prints their names rather than typing them one by one
--O /path_to_output folder
+ --genomicsdb-workspace-path cohort_db \
+  --sample-name-map gvcf_map.txt \
 ```
+To make the gvcf_map.txt, simply run this in the HaplotypeCaller output directory  
+```
+for gvcf in *.g.vcf.gz; do
+  sample=$(basename "$gvcf" .g.vcf.gz)
+  echo -e "${sample}\t$(pwd)/${gvcf}"
+done > gvcf_map.txt
+```  
 
 Next we need to joint call the SNPs using ```GenotypeGVCFs``` 
+```
+gatk GenotypeGVCFs \
+  -R reference.fasta \
+  -V gendb://cohort_db \
+  -O cohort.vcf.gz
+```
 
 Use ```VariantFiltration``` default settings to filter variants
 
