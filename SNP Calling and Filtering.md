@@ -4,26 +4,36 @@
 Input - BAM file containing reads   
 Reference - Reference genome 
 
-## First need to call variants using GATK ```HaplotypeCaller```    
+## First we need to call variants using GATK ```HaplotypeCaller```    
 Load GATK  
 ```  
 module load gatk  
 ```
-Then create a list file containing all of the alignments.   
+Because ```HaplotypeCaller``` can only handle one sample at a time we need to loop the command for each alignment. To do this we create a list file containing every alignment.   
 ```
 ls /path_to_alignments/*bam > bam_list.txt
-```  
-
-Run ```HaplotypeCaller```  
 ```
-gatk Haplotypecaller \   
--R /path_to_reference \  
--L /path_to_mapped_reads \
---sample-ploidy 1 \  
+
+Then we run ```HaplotypeCaller``` on all the alignments
+```
+REF=/path_to_reference  
+BAM_LIST=/path_to_bam_list.txt  
+OUT=/path_to_output_gvcf folder
+BAM=$(sed -n "${SLURM_ARRAY_TASK_ID}p" $BAM_LIST)
+SAMPLE=$(basename "$BAM" .bam)
+gatk HaplotypeCaller \   
+-R $REF \  
+-I $BAM \    
 -ERC GVCF \  
--O /path_to_output_gvcf folder
+-O $OUT/${SAMPLE}.g.vcf.gz
 ```    
-Then we need to combine the gVCF files from HaplotypeCaller into one VCF using ```CombineGVCFs```   
+Then we need to combine the gVCF files from HaplotypeCaller into one VCF using ```GenomicsDBImport```
+
+```
+gatk GenomicsDBImport \
+-R ref
+
+```
 ```
 gatk CombineGVCFs \
 -R /path_to_reference \
