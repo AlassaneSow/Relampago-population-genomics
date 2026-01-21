@@ -14,7 +14,7 @@ Because ```HaplotypeCaller``` can only handle one sample at a time we need to lo
 ls /path_to_alignments/*bam > bam_list.txt
 ```
 
-Then we run ```HaplotypeCaller``` on all the alignments
+Then we run ```HaplotypeCaller``` on all the alignments. See HCall.sh for the full script. 
 ```
 REF=/path_to_reference  
 BAM_LIST=/path_to_bam_list.txt  
