@@ -31,8 +31,8 @@ Then we need to combine the gVCF files from HaplotypeCaller into one VCF using `
 ```
 gatk GenomicsDBImport \
 -R /path_to_reference \
- --genomicsdb-workspace-path cohort_db \
-  --sample-name-map gvcf_map.txt \
+--genomicsdb-workspace-path cohort_db \
+--sample-name-map gvcf_map.txt \
 ```
 To make the gvcf_map.txt, simply run this in the HaplotypeCaller output directory  
 ```
