@@ -62,7 +62,8 @@ gatk SelectVariants \
 ```
 ## Prior to any analysis we need to filter SNPs using ```VariantFiltration``` 
 
-Use ```VariantFiltration``` default settings to filter variants
+I am using the ```VariantFiltration``` settings as written in Treindl et al. 2023 
+
 ```console
 SNP ="path to variant output"
 ```
