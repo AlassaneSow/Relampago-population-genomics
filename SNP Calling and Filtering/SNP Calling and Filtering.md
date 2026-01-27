@@ -22,6 +22,8 @@ BAM_LIST="/path_to_bam_list.txt"
 OUT="/path_to_output_gvcf folder"
 BAM=$(sed -n "${SLURM_ARRAY_TASK_ID}p" $BAM_LIST)
 SAMPLE=$(basename "$BAM" .bam)
+```
+```console
 gatk HaplotypeCaller \   
 -R ${REF} \  
 -I ${BAM} \    
@@ -51,7 +53,7 @@ gatk GenotypeGVCFs \
   -O cohort.vcf.gz
 ```
 ## Now we can extract just SNPs using ```SelectVariants```
-```
+```console
 gatk SelectVariants \
 -R reference.fasta \
 -V cohort.vcf.gz \
@@ -75,10 +77,6 @@ gatk VariantFiltration \
 --filter-name "XXX" --filter-expression "XXXX" \
 --filter-name "XXX" --filter-expression "XXXX" \
 --filter-name "XXX" --filter-expression "XXXX" 
-
 ```
 
-Split output by sample
-
-Select only SNPs from output
 
