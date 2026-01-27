@@ -1,4 +1,4 @@
-# Variamt calling using the Genome Analysis ToolKit 
+# Variant calling using the Genome Analysis ToolKit 
 
 ## Required Files
 Input - BAM file containing reads   
@@ -50,7 +50,15 @@ gatk GenotypeGVCFs \
   -V gendb://cohort_db \
   -O cohort.vcf.gz
 ```
-## Prior to any analysis we need to filter variants using ```VariantFiltration``` 
+## Now we can extract just SNPs using ```SelectVariants```
+```
+gatk SelectVariants \
+-R reference.fasta \
+-V cohort.vcf.gz \
+--select-type-to-include SNP \
+-O unfiltered_SNPS.vcf.gz
+```
+## Prior to any analysis we need to filter SNPs using ```VariantFiltration``` 
 
 Use ```VariantFiltration``` default settings to filter variants
 ```console
@@ -62,6 +70,11 @@ gatk VariantFiltration \
 -R ${REF} \
 -V ${SNP} \
 -O ${SNP}/filtered_SNPS.vcf \
+--filter-name "XXX" --filter-expression "XXXX" \
+--filter-name "XXX" --filter-expression "XXXX" \
+--filter-name "XXX" --filter-expression "XXXX" \
+--filter-name "XXX" --filter-expression "XXXX" \
+--filter-name "XXX" --filter-expression "XXXX" 
 
 ```
 
