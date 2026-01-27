@@ -60,9 +60,9 @@ gatk SelectVariants \
 --select-type-to-include SNP \
 -O unfiltered_SNPS.vcf.gz
 ```
-## Prior to any analysis we need to filter SNPs using ```VariantFiltration``` 
+## Prior to any analysis we need to filter SNPs using ```VariantFiltration``` and ```vcftools```
 
-I am using the ```VariantFiltration``` settings as written in Treindl et al. 2023 
+ We use ```VariantFiltration``` to remove SNPs with low quality metrics according to the GATK Best Practices Workflow
 
 ```console
 SNP ="path to variant output"
@@ -79,5 +79,7 @@ gatk VariantFiltration \
 --filter-name "XXX" --filter-expression "XXXX" \
 --filter-name "XXX" --filter-expression "XXXX" 
 ```
+
+Afterwards we use ```vcftools``` and ```bcftoools``` to remove uninformative SNPs (i.e., singletons, those with excessive coverage etc)  
 
 
