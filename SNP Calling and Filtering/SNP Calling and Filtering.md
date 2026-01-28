@@ -3,10 +3,18 @@
 ## Required Files
 Input - BAM file containing reads   
 Reference - Reference genome 
-## Required Programs  
+## Required Programs 
 Genome Analysis Toolkit ```gatk```
 ```console
 module load gatk/4.6.2.0  
+```
+VCFtools ```vcftools```
+```console
+module load vcftools/0.1.16
+```
+BCFtools ```bcftools```
+```console
+module load bcftools/1.22
 ```
 ## First we need to call variants using ```HaplotypeCaller```    
 
@@ -60,12 +68,13 @@ gatk SelectVariants \
 --select-type-to-include SNP \
 -O unfiltered_SNPS.vcf.gz
 ```
-## Prior to any analysis we need to filter SNPs using ```VariantFiltration``` and ```vcftools```
+## Prior to any analysis we need to filter SNPs using ```VariantFiltration```, ```vcftools```, and  ```bcftools```
 
  We use ```VariantFiltration``` to remove SNPs with low quality metrics according to the GATK Best Practices Workflow
 
 ```console
 SNP ="path to variant output"
+REF ="/path_to_reference"  
 ```
 
 ```console
@@ -73,13 +82,16 @@ gatk VariantFiltration \
 -R ${REF} \
 -V ${SNP} \
 -O ${SNP}/filtered_SNPS.vcf \
---filter-name "XXX" --filter-expression "XXXX" \
---filter-name "XXX" --filter-expression "XXXX" \
---filter-name "XXX" --filter-expression "XXXX" \
---filter-name "XXX" --filter-expression "XXXX" \
---filter-name "XXX" --filter-expression "XXXX" 
+--filter-name "MQ" - filter "MQ < 40" \
+--filter-name "FS" --filter-expression "FS > 60" \
+--filter-name "QD" --filter-expression "QD < 2"
 ```
 
-Afterwards we use ```vcftools``` and ```bcftoools``` to remove uninformative SNPs (i.e., singletons, those with excessive coverage etc)  
+Afterwards we use ```vcftools``` and ```bcftoools``` to remove uninformative SNPs (E.G., singletons or those with excessive coverage etc)
+
+```console
+
+```
+
 
 
