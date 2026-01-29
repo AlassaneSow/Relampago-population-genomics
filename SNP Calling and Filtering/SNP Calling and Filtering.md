@@ -70,7 +70,8 @@ gatk SelectVariants \
 ```
 ## Prior to any analysis we need to filter SNPs using ```VariantFiltration```, ```vcftools```, and  ```bcftools```
 
- We use ```VariantFiltration``` to remove SNPs with low quality metrics according to the GATK Best Practices Workflow
+ We use ```VariantFiltration``` to remove SNPs with low quality metrics according to the GATK Best Practices Workflow. 
+ * Note to self, more information is at https://evodify.com/gatk-in-non-model-organism/
 
 ```console
 SNP ="path to variant output"
@@ -82,9 +83,9 @@ gatk VariantFiltration \
 -R ${REF} \
 -V ${SNP} \
 -O ${SNP}/filtered_SNPS.vcf \
---filter-name "MQ" - filter "MQ < 40" \
---filter-name "FS" --filter-expression "FS > 60" \
---filter-name "QD" --filter-expression "QD < 2"
+--filter "MQ < 40.0" --filter-name "MQ" \
+--filter "FS > 60.0" --filter-name "FS" \
+--filter "QD < 2" --filter-name "QD" \
 ```
 
 Afterwards we use ```vcftools``` and ```bcftoools``` to remove uninformative SNPs (E.G., singletons or those with excessive coverage etc)
