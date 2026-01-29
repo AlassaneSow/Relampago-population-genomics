@@ -90,7 +90,7 @@ gatk VariantFiltration \
 Afterwards we use ```vcftools``` and ```bcftoools``` to remove uninformative SNPs (E.G., singletons or those with excessive coverage etc)
 
 ```console
-
+remove those with >5% missing datat, fewer than two allesl, and read depth below 10 and above 75
 ```
 
 ## Now that we've made a file containing informative, high-quality SNPs we can start analyzing the data. I chose to analyze the [population strucutre](/Population%20Structure/Population%20Structure.md) first. 
