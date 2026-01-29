@@ -53,14 +53,14 @@ for gvcf in *.g.vcf.gz; do
 done > gvcf_map.txt
 ```  
 
-## After calling variants, we need to joint preform joint genotyping using ```GenotypeGVCFs``` 
+## After calling variants, we need to preform joint genotyping using ```GenotypeGVCFs``` 
 ```console
 gatk GenotypeGVCFs \
   -R reference.fasta \
   -V gendb://cohort_db \
   -O cohort.vcf.gz
 ```
-## Now we can extract just SNPs using ```SelectVariants```
+## And extract just the SNPs using ```SelectVariants```
 ```console
 gatk SelectVariants \
 -R reference.fasta \
@@ -92,6 +92,8 @@ Afterwards we use ```vcftools``` and ```bcftoools``` to remove uninformative SNP
 ```console
 
 ```
+
+Now we can proceed with the analyses. I chose to analyze [population strucutre](/Population%20Structure/Population%20Structure.md) first. 
 
 
 
