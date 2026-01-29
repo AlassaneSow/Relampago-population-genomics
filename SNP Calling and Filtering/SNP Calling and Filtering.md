@@ -3,7 +3,7 @@
 ## Required Files
 Input - BAM file containing reads   
 Reference - Reference genome 
-## Required Programs*
+## Required Programs
 Genome Analysis Toolkit ```gatk```
 ```console
 module load gatk/4.6.2.0  
@@ -16,7 +16,6 @@ BCFtools ```bcftools```
 ```console
 module load bcftools/1.22
 ```
-*If you are curious about the syntax for any of these of programs or want to understand how they work, you can visit the GATK website as they explain it much better than I could (: 
 ## First we need to call variants using ```HaplotypeCaller```    
 
 Because ```HaplotypeCaller``` can only handle one sample at a time we need to loop the command for each alignment. To do this we create a list file containing every alignment.   
