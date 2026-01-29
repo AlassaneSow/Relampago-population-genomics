@@ -93,7 +93,6 @@ Afterwards we use ```vcftools``` and ```bcftoools``` to remove uninformative SNP
 
 ```
 
-Now we can proceed with the analyses. I chose to analyze [population strucutre](/Population%20Structure/Population%20Structure.md) first. 
-
+## Now that we've made a file containing informative, high-quality SNPs we can start analyzing the data. I chose to analyze the [population strucutre](/Population%20Structure/Population%20Structure.md) first. 
 
 
