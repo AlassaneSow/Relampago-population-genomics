@@ -1,6 +1,6 @@
 ## Phylogenetic trees (Chow)  
 ### Required files 
-FASTA alignment with name up to 256 charcters long. To align WGS with SNP data, use   
+FASTA alignment with name up to 256 charcters long. To align WGS with SNP data, use https://github.com/broadinstitute/broad-fungalgroup
 
 Construct ML phylogenies using ```RAxML v8.0``` using GTRCAT nucleotide substitution model and boostrap based on 1,000 replicates. 
 
