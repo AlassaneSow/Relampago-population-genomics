@@ -4,3 +4,6 @@ Code used for genome assembly of Parvodontia relampaga and analysis of its popul
   2) The full scripts used for each analysis/process
 
 
+note to self. 
+one paper describing population strucutre, migration patterns, host-pathogen genotyper interactions
+one paper desribing migration patterns, genes involved in local adaptation, and ecological niche modeling 
