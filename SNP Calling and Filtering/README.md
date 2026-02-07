@@ -1,10 +1,10 @@
 # Variant calling using the Genome Analysis ToolKit 
 This code was largely based on the methods described by [Treindl et al. 2023](https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2023.1129867/full), [Tremble et al. 2022](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.18521), and notes provided by Dmytro Kryvokhyzha in [GATK: the best practice for genotype calling in a non-model organism](https://evodify.com/gatk-in-non-model-organism/)
 
-## Required Files
+### Required Files
 Input - BAM file containing reads   
 Reference - Reference genome 
-## Required Programs
+### Required Programs
 Genome Analysis Toolkit ```gatk```
 ```console
 module load gatk/4.6.2.0  
@@ -17,14 +17,14 @@ BCFtools ```bcftools```
 ```console
 module load bcftools/1.22
 ```
-## First we need to call variants using ```HaplotypeCaller```    
+## First we call variants using ```HaplotypeCaller```    
 
-Because ```HaplotypeCaller``` can only handle one sample at a time we need to loop the command for each alignment. To do this we create a list file containing every alignment.   
+Because ```HaplotypeCaller``` can only handle one sample at a time we need to call each alignment one at a time. To do this we created a list file containing every alignment.   
 ```console
 ls /path_to_alignments/*bam > bam_list.txt
 ```
 
-Then we run ```HaplotypeCaller``` on all the alignments. See HCall.sh for the full script. Each variable is explained below. 
+Then we ran ```HaplotypeCaller``` on all the alignments. See HCall.sh for the full script. Each variable is explained below. 
 ```console
 REF="/path_to_reference"  
 BAM_LIST="/path_to_bam_list.txt"  
@@ -40,7 +40,7 @@ gatk HaplotypeCaller \
 -ERC GVCF \  
 -O $OUT/${SAMPLE}.g.vcf.gz
 ```    
-Then we need to combine the gVCF files from HaplotypeCaller into one VCF using ```GenomicsDBImport```  
+Then we combinened the gVCF files from HaplotypeCaller into one VCF using ```GenomicsDBImport```  
 ```console
 gatk GenomicsDBImport \
 -R /path_to_reference \
@@ -55,7 +55,7 @@ for gvcf in *.g.vcf.gz; do
 done > gvcf_map.txt
 ```  
 
-## After calling variants, we need to preform joint genotyping using ```GenotypeGVCFs``` 
+## After calling variants, we preform joint genotyping using ```GenotypeGVCFs``` 
 ```console
 gatk GenotypeGVCFs \
   -R reference.fasta \
