@@ -3,8 +3,7 @@ This code was largely based on the methods described by [Tremble et al. 2022](ht
 ## Required files
 Populations file
 * The populactions file is necessary for fst and dxy.  
-LD pruned VCF  
-non-LD pruned VCF
+variant sites VCF  
 Reference transcriptome
 ## Required programs
 ```pixy```
@@ -46,7 +45,9 @@ out <- d[data$fst >= fst_cut & data$dxy >= dxy_cut, ]
 write.table(out, "path/to/pixy/output/5perc_genic.tsv, sep="\t", quote=FALSE, row.names=FALSE)
 ```
 
-Lastly we remove loci that were divergent due to genetic drift using 
+Lastly we remove loci that were divergent due to genetic drift using ```PCADAPT```
+need to make scree plot to find first plateau to set K to. 
+See https://bcm-uga.github.io/pcadapt/articles/pcadapt.html
 ```console
 ```
 
