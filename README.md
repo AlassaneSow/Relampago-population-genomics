@@ -5,6 +5,6 @@ Code used for genome assembly of Parvodontia relampaga and analysis of its popul
 
 
 note to self. 
-one paper describing population strucutre, migration patterns, host-pathogen genotyper interactions
-one paper desribing migration patterns, genes involved in local adaptation, and ecological niche modeling 
-need to make picture of flow chart bruh 
+one paper describing population strucutre, migration patterns, host-pathogen genotyper interactions  
+one paper desribing migration patterns, genes involved in local adaptation, and ecological niche modeling   
+# need to make picture of flow chart bruh 
