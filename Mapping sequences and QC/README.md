@@ -1,23 +1,49 @@
 # Genome assembly 
-50X coverage short read whole genome sequences. 
-use aaftf 
-## Required Files  
-All of the variables used here (i.e., {data}) are written out and explained in the full scripts.  
-## Quality control and trimming  
-Check read quality with ```fastqc```
+We used COMPANY Illlumina HiSeq4000 platform to sequence 50X coverage whole genomes. This code is largley based on the work in [Treindl et al. 2023](https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2023.1129867/full)
+### Required Files  
+Reference genome from JGI 
+Raw sequence data
+### Required programs
+FASTQC ```fastqc```   
+Trimmomatic ```trimmomatic v.40```  
+Burrows-Wheeler Aligner ```bwa 0.7.19```  
+Sambamba ```sambamba```   
+Bedtools ```bedtools```  
+## First we check the sequencing quality using ```fastqc```  
 ```console
-module load fastqc
 fastqc path/to/fastq.gz -o path/to/output/
 ```
-We trimmed reads with ```trimmomatic v.40```. Read quality will determine the trimming options used below. However, assuming everything looks acceptable you can remove adaptors, sequences with <3 base quality at the begining or end of the read, and sequences <50 bp.  
+It looks like the quality is good. See NAME.html for more read quality information. 
+PUT IMAGE HERE!
+
+## Next we trimmed reads with ```trimmomatic v.40```.  
+The read quality will  will determine which trimming options one uses. Because our quality looks okay we simply removed adaptors, sequences with <3 base quality at the begining or end of the read, and sequences <50 bp.  
 ```console
-###note to self that {data} refers to the file path and {name} refers to the unique name of each collection
-trimmomatic PE -threads 2 -phred33 ${}
-
-trimmomatic PE -threads 2 -phred33 ${data}20180730.A-AT_pool1_${name}_R1.fastq.gz
-
-${data}20180730.A-AT_pool1_${name}_R2.fastq.gz ${out}/${name}.R1.trim.fq.gz ${out}/logs/${name}.R1.un.fq.gz ${out}/${name}.R2.trim.fq.gz ${out}/logs/${name}.R2.un.fq.gz ILLUMINACLIP:${adaptor}:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50 > ${out}/logs/${name}.trimmo.log  2> ${out}/logs/${name}.trimmo.err
-
+data="path/to/raw/reads/folder/"
+name="path_to_names_file"
+out="path/to/output/folder"
+adaptor="path/to/adaptor/file.txt"
+```
+To make the names file, we ran this in the folder containing either the forward or reverse reads
+```console
+ls sharedprefix_*_R1.fastq.gz | \
+  sed 's/^sharedprefix_//' | \
+  sed 's/_R1.fastq.gz$//' > names.txt
+```
+```console
+trimmomatic PE -phred33 -threads 2 \ 
+${data}sharedprefix_${name}_R1.fastq.gz \
+${data}sharedprefix_${name}_R2.fastq.gz \
+${out}/${name}.R1.trim.fq.gz \
+${out}/logs/${name}.R1.un.fq.gz \
+${out}/${name}.R2.trim.fq.gz \
+${out}/logs/${name}.R2.un.fq.gz \
+ILLUMINACLIP:${adaptor}:2:30:10 \
+LEADING:3 \
+TRAILING:3 \
+SLIDINGWINDOW:4:15 \
+MINLEN:50 > ${out}/logs/${name}.trimmo.log \
+2> ${out}/logs/${name}.trimmo.err
 ```  
 ## Mapping to refernce genome
 We mapped reads to the P. relampaga reference genome using ```bwa 0.7.19```  
