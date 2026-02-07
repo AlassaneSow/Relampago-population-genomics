@@ -17,20 +17,17 @@ It looks like the quality is good. See NAME.html for more read quality informati
 PUT IMAGE HERE!
 
 ## Next we trimmed reads with ```trimmomatic v.40```.  
-The read quality will  will determine which trimming options one uses. Because our quality looks okay we simply removed adaptors, sequences with <3 base quality at the begining or end of the read, and sequences <50 bp.  
+The read quality will  will determine which trimming options one uses. Because our quality looks okay we simply removed...
+* adaptors
+* sequences with <3 base quality at the begining or end of the read
+* sequences <50 bp  
+
 ```console
 data="path/to/raw/reads/folder/"
-name="path_to_names_file"
+name="path_to_names_file.txt"
 out="path/to/output/folder"
 adaptor="path/to/adaptor/file.txt"
-```
-To make the names file, we ran this in the folder containing either the forward or reverse reads
-```console
-ls sharedprefix_*_R1.fastq.gz | \
-  sed 's/^sharedprefix_//' | \
-  sed 's/_R1.fastq.gz$//' > names.txt
-```
-```console
+
 trimmomatic PE -phred33 -threads 2 \ 
 ${data}sharedprefix_${name}_R1.fastq.gz \
 ${data}sharedprefix_${name}_R2.fastq.gz \
@@ -44,9 +41,15 @@ TRAILING:3 \
 SLIDINGWINDOW:4:15 \
 MINLEN:50 > ${out}/logs/${name}.trimmo.log \
 2> ${out}/logs/${name}.trimmo.err
-```  
-## Mapping to refernce genome
-We mapped reads to the P. relampaga reference genome using ```bwa 0.7.19```  
+```
+### Note  
+To make the names file, we ran this in the folder containing either the forward or reverse reads
+```console
+ls sharedprefix_*_R1.fastq.gz | \
+  sed 's/^sharedprefix_//' | \
+  sed 's/_R1.fastq.gz$//' > names.txt
+```
+## Next we mapped reads to the _P. relampaga_ reference genome using ```bwa 0.7.19```  
 ```
 ```  
 We then converted the sam files to bams using ```sambamba```  
