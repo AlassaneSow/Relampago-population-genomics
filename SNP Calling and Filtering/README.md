@@ -1,4 +1,5 @@
 # Variant calling using the Genome Analysis ToolKit 
+This code was largely based on the methods described by [Treindl et al. 2023](https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2023.1129867/full), [Tremble et al. 2022](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.18521), and notes provided by Dmytro Kryvokhyzha in [GATK: the best practice for genotype calling in a non-model organism](https://evodify.com/gatk-in-non-model-organism/)
 
 ## Required Files
 Input - BAM file containing reads   
@@ -23,7 +24,7 @@ Because ```HaplotypeCaller``` can only handle one sample at a time we need to lo
 ls /path_to_alignments/*bam > bam_list.txt
 ```
 
-Then we run ```HaplotypeCaller``` on all the alignments. See HCall.sh for the full script. 
+Then we run ```HaplotypeCaller``` on all the alignments. See HCall.sh for the full script. Each variable is explained below. 
 ```console
 REF="/path_to_reference"  
 BAM_LIST="/path_to_bam_list.txt"  
@@ -31,24 +32,7 @@ OUT="/path_to_output_gvcf folder"
 BAM=$(sed -n "${SLURM_ARRAY_TASK_ID}p" $BAM_LIST)
 SAMPLE=$(basename "$BAM" .bam)
 ```
-# Note to self
-```
-#!/bin/bash
-#SBATCH --array=1-100
 
-REF="/path_to_reference"
-BAM_LIST="/path_to_bam_list.txt"
-OUT="/path_to_output_gvcf_folder"
-
-BAM=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "$BAM_LIST")
-SAMPLE=$(basename "$BAM" .bam)
-
-gatk HaplotypeCaller \
-  -R "$REF" \
-  -I "$BAM" \
-  -ERC GVCF \
-  -O "$OUT/${SAMPLE}.g.vcf.gz"
-```
 ```console
 gatk HaplotypeCaller \   
 -R ${REF} \  
@@ -88,8 +72,7 @@ gatk SelectVariants \
 ```
 ## Prior to any analysis we need to filter SNPs using ```VariantFiltration```, ```vcftools```, and  ```bcftools```
 
- We use ```VariantFiltration``` to remove SNPs with low quality metrics according to the GATK Best Practices Workflow. 
- * Note to self, more information is at https://evodify.com/gatk-in-non-model-organism/
+ We used ```VariantFiltration``` to remove SNPs with low quality metrics as defined in the GATK Best Practices Workflow. 
 
 ```console
 SNP ="path to variant output"
@@ -106,11 +89,34 @@ gatk VariantFiltration \
 --filter "QD < 2" --filter-name "QD" \
 ```
 
-Afterwards we use ```vcftools``` and ```bcftoools``` to remove uninformative SNPs (E.G., singletons or those with excessive coverage etc)
+Afterwards we use ```vcftools``` and ```bcftoools``` to remove uninformative SNPs. We...
+* kept only chromosonal SNPs
+* removed those with >5% missing data
+* removed those with read depth <10
+* removed those with ead depth >75
+* Isolates with >80% missing data
 
 ```console
-remove those with >5% missing datat, fewer than two allesl, and read depth below 10 and above 75
+bcftools view \
+-r Chr1,Chr2..... \
+filtered_SNPS.vcf.gz -Oz -o nuclear_filtered_SNPS.vcf.gz
 ```
+```console
+vcftools \
+--gzvcf nuclear_filtered_SNPS.vcf.gz \ 
+--mac 3 \
+--min-meanDP 10 \
+--max-meanDP 75 \
+--min-alleles 2 \
+--max-alleles 2 \
+--recode --recode-INFO-all \
+--stdout | bgzip > complete_filtered_SNPS.vcf.gz
+```
+
+Optional filtering based on the analysis and quality of the data. See [Treindl et al. 2023](https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2023.1129867/full):
+* Remove SNPs with >30% missing in one population (I will have to check if missigness is wildly uneven prior to doing this)
+* Remove SNPs with >80% missing data
+* --mac 3. This removes rare alleles and is likely optional. I Can retain for some analyses but probably important for selective sweep scans? Idk. 
 
 ## Now that we've made a file containing informative, high-quality SNPs we can start analyzing the data. I chose to analyze the [population strucutre](/Population%20Structure/Population%20Structure.md) first. 
 
