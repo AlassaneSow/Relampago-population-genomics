@@ -117,6 +117,7 @@ vcftools \
 --gzvcf nuclear_filtered_SNPS.vcf.gz \ 
 --mac 3 \
 --min-meanDP 10 \
+--max-missing 0.70 \
 --max-meanDP 75 \
 --min-alleles 2 \
 --max-alleles 2 \
