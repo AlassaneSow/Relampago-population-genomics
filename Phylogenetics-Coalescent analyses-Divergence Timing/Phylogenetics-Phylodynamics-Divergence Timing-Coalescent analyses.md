@@ -2,6 +2,8 @@
 ### Required files 
 FASTA alignment with name up to 256 charcters long. To align WGS with SNP data, use https://github.com/broadinstitute/broad-fungalgroup
 
+Follow these from Tremble et al. Coalescent phylogenomic reconstruction of the group from 702 single-copy gene trees. 
+
 Construct ML phylogenies using ```RAxML v8.0``` using GTRCAT nucleotide substitution model and boostrap based on 1,000 replicates. 
 
 ## Maximum clade credibility phylogenetic tree using BEAST (Chow)  
