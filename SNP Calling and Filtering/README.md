@@ -62,17 +62,28 @@ gatk GenotypeGVCFs \
   -V gendb://cohort_db \
   -O cohort.vcf.gz
 ```
-## And extract just the SNPs using ```SelectVariants```
+## For most of the analyses (e.g., PCA and ADMIXTURE) we need to only use SNPs. We extracted just the SNPs using ```SelectVariants```
 ```console
 gatk SelectVariants \
 -R reference.fasta \
 -V cohort.vcf.gz \
 --select-type-to-include SNP \
+--exclude-non-variants \
+--exclude-filtered \
 -O unfiltered_SNPS.vcf.gz
 ```
+## To calculate the population statistics in ```pixy``` we need to keep both SNPs and invariant sites. We simply ran the same command without the exclude-non-variants and --select-type-to-include commands. 
+```console
+gatk SelectVariants \
+-R reference.fasta \
+-V cohort.vcf.gz \
+--exclude-filtered \
+-O unfiltered_SNPS.vcf.gz
+```
+# Note to self to filter quality first then seperate variant and invariant sites.
 ## Prior to any analysis we need to filter SNPs using ```VariantFiltration```, ```vcftools```, and  ```bcftools```
 
- We used ```VariantFiltration``` to remove SNPs with low quality metrics as defined in the GATK Best Practices Workflow. 
+We used ```VariantFiltration``` to remove SNPs with low quality metrics as defined in the GATK Best Practices Workflow. 
 
 ```console
 SNP ="path to variant output"
