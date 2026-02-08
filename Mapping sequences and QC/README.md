@@ -51,6 +51,15 @@ ls sharedprefix_*_R1.fastq.gz | \
 ```
 ## Next we mapped reads to the _P. relampaga_ reference genome using ```bwa 0.7.19```  
 ```
+bwa index path/to/reference.fa
+```
+```
+bwa mem -M -t 2 \
+${Ref} \
+${data}${name}_1.trim.fq.gz \
+${data}${name}_2.trim.fq.gz \
+-M \
+-R "@RG\tID:${name}\tSM:${name}\tPL:Illumina" > ${TMPDIR}/${name}.sam
 ```  
 We then converted the sam files to bams using ```sambamba```  
 ```
