@@ -7,7 +7,7 @@
 #SBATCH --ntasks=1
 #SBATCH --array=1-100
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=12gb
+#SBATCH --mem=16gb
 #SBATCH --time=12:00:00
 #SBATCH --output=map_reads_%j.out
 pwd; hostname; date
@@ -17,7 +17,8 @@ name=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "${names}")
 ref="path/to/reference.fasta"
 data="path/to/raw/reads/folder"
 OUTDIR="path/to/output/folder"
-TMPDIR="path/to/tempdir/${name}"
+TMPDIR="${SLURM_TMPDIR}/${name}"
+mkdir -p "$TMPDIR"
 
 mkdir -p "${OUTDIR}"
 mkdir -p "${TMPDIR}"
@@ -36,4 +37,4 @@ bwa mem -M -t ${SLURM_CPUS_PER_TASK} \
     -l 0 \
     -m 10GB \
     --tmpdir ${TMPDIR} \
-    -o ${OUTDIR}/${name}.sorted.bam
+    -o "${OUTDIR}/${name}.sorted.bam"
