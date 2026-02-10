@@ -9,7 +9,7 @@ Trimmomatic ```trimmomatic v.40```
 Burrows-Wheeler Aligner ```bwa 0.7.19```  
 Sambamba ```sambamba```   
 Bedtools ```bedtools```  
-## First we check the sequencing quality using ```fastqc```  
+## First we checked the sequencing quality using ```fastqc```  
 ```console
 fastqc path/to/fastq.gz -o path/to/output/
 ```
@@ -17,7 +17,7 @@ It looks like the quality is good. See NAME.html for more read quality informati
 PUT IMAGE HERE!
 
 ## Next we trimmed reads with ```trimmomatic v.40```.  
-The read quality will  will determine which trimming options one uses. Because our quality looks okay we simply removed...
+The read quality will determine which trimming options one uses. Because our quality looks okay we simply removed...
 * adaptors
 * sequences with <3 base quality at the begining or end of the read
 * sequences <50 bp  
@@ -50,10 +50,10 @@ ls sharedprefix_*_R1.fastq.gz | \
   sed 's/_R1.fastq.gz$//' > names.txt
 ```
 ## Next we mapped reads to the _P. relampaga_ reference genome using ```bwa 0.7.19```  
-```
+```console
 bwa index path/to/reference.fa
 ```
-```
+```console
 bwa mem -M -t 2 \
 ${Ref} \
 ${data}${name}_1.trim.fq.gz \
@@ -75,8 +75,9 @@ sambamba view -t 4 \
 -m 10GB \
 --tmpdir ${TMPDIR} > ${OUTDIR}/${name}.sort.bam
 ```  
-We assesed mapping quality and filtered reads using ```sambamba```  
+We then assesed the mapping quality and filtered reads using ```sambamba```  
 ```
+sambamba flagstat ${TMPDIR}/${name}.sort.bam > ${path_out}stats/${name}
 ```  
 Mapping statistics after filtering   
 ```
