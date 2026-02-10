@@ -59,10 +59,21 @@ ${Ref} \
 ${data}${name}_1.trim.fq.gz \
 ${data}${name}_2.trim.fq.gz \
 -M \
--R "@RG\tID:${name}\tSM:${name}\tPL:Illumina" > ${TMPDIR}/${name}.sam
+-R "@RG\tID:${name}\tSM:${name}\tPL:Illumina" > ${OUTDIR}/${name}.sam
 ```  
 We then converted the sam files to bams using ```sambamba```  
 ```
+sambamba view -t 4 \
+-S ${TMPDIR}/${name}.sam \
+-f bam \
+-l 0 \
+-o /dev/stdout|sambamba sort\
+/dev/stdin \
+-o /dev/stdout \
+-t ${proc} \
+-l 0 \
+-m 10GB \
+--tmpdir ${TMPDIR} > ${OUTDIR}/${name}.sort.bam
 ```  
 We assesed mapping quality and filtered reads using ```sambamba```  
 ```
