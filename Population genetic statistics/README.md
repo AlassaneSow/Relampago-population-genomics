@@ -1,5 +1,5 @@
 # Calculating population summary statistics. 
-This code was largely based on the methods described by [Tremble et al. 2022](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.18521). Here we calculate nucleotide diversity (&pi;), the fixation index (F<sub>ST</sub>), absolute genetic divergence (d<sub>XY</sub>), and Taijama's D 
+This code was largely based on the methods described by [Tremble et al. 2022](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.18521). Here we calculate nucleotide diversity (&pi;), the fixation index (F<sub>ST</sub>), absolute genetic divergence (d<sub>XY</sub>), and Taijama's D. To calculate sliding window size, see https://speciationgenomics.github.io/ld_decay/
 ## Required files
 Populations file
 * The populactions file is necessary for fst and dxy.  
