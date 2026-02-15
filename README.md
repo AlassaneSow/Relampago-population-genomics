@@ -8,3 +8,4 @@ note to self.
 one paper describing population strucutre, naivte or not? host-pathogen genotyper interactions  
 one paper desribing migration patterns, genes involved in local adaptation, and ecological niche modeling   
 # need to make picture of flow chart bruh 
+# Refer to and cite this in approriate folders https://speciationgenomics.github.io/
