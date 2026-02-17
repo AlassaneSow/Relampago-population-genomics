@@ -130,6 +130,6 @@ Optional filtering based on the analysis and quality of the data. See [Treindl e
 * Remove SNPs with >80% missing data
 * --mac 3. This removes rare alleles and is likely optional. I Can retain for some analyses but probably important for selective sweep scans? Idk. 
 
-## Now that we've made a file containing informative, high-quality SNPs we can start analyzing the data. I chose to analyze the [population strucutre](/Population%20Structure/Population%20Structure.md) first. 
+## Now that we've made a file containing informative, high-quality SNPs we can start analyzing the data. I chose to [LD prune](/Linkage%20Disequilibrium/README.md) the data first before analyzing the [population strucutre](/Population%20Structure/Population%20Structure.md). 
 
 
