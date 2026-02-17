@@ -16,4 +16,6 @@ module load plinkvXXX
 ```
 ## Linkage pruning
 
+## Measuring LD decay
+
 Optional significance teste for wether individuals belong to same population
