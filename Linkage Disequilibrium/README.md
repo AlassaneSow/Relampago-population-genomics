@@ -17,5 +17,39 @@ module load plinkvXXX
 ## Linkage pruning
 
 ## Measuring LD decay
+We used ```plink``` to measure LD decay for each population.  
+First, we made seperate vcf files for each population. To do this we made .pop population files that contained the names of each sample in a population.
+```
+FID IID
+sample1 sample1
+sample2 sample2
+sample3 sample3
+```
+Then we used ```vcftools``` to split the .vcf file. 
+```
+vcftools \
+--vcf $VCF \
+--keep $POP \
+--recode --recorde-INFO-all \
+--out $NAME 
+```
+Next we converted the .vcf to a format ```plink``` can use. 
+```
+plink \
+--vcf $VCF \
+--allow-extra-chr \
+--make-bed \
+--out $POP
+```
+To reduce noise we removed rare SNPs
+```
+plink \
+--bfile ${POP} \
+--allow-extra-chr \
+--maf 0.05 \
+--make-bed \
+--out ${POP}_filt
+```
+Lastly we calculate LD in 10kb windows
 
 Optional significance teste for wether individuals belong to same population
