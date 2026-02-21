@@ -21,7 +21,6 @@ The read quality will determine which trimming options one uses. Because our qua
 * adaptors
 * sequences with <3 base quality at the begining or end of the read
 * sequences <50 bp  
-
 ```console
 data="path/to/raw/reads/folder/"
 name="path_to_names_file.txt"
@@ -75,7 +74,7 @@ sambamba view -t 4 \
 -m 10GB \
 --tmpdir ${TMPDIR} > ${OUTDIR}/${name}.sort.bam
 ```  
-We then assesed the mapping statisitcs and filtered low quality alignments using ```sambamba``` and ```gatk```  
+We then assesed the mapping statisitcs, filtered low quality alignments (those with mapping quality less than 20), and removed duplicates using ```sambamba``` and ```gatk```  
 ```console
 sambamba flagstat ${data}/${name}.sort.bam \
 > ${OUTDIR}/stats/${name}
