@@ -9,3 +9,5 @@ one paper describing population strucutre, naivte or not? host-pathogen genotype
 one paper desribing migration patterns, genes involved in local adaptation, and ecological niche modeling   
 # need to make picture of flow chart bruh 
 # Refer to and cite this in approriate folders https://speciationgenomics.github.io/
+
+Note - With the availability of several hundreds to tens of thousands of loci in the population genomic realm, neutral loci can be differentiated from adaptive loci by calculating locus-statistics such as the fixation index (FST), which is a statistical measure of population differentiation based upon genetic distance. Loci with outlier FST values are likely to be under selection (adaptive loci) and hence should be removed from the analyses for making accurate inferences about demographic processes (Grünwald et al. 2016). ## Need to double check that the SNP filtering does this prior to PCA etc etc. 
