@@ -12,11 +12,13 @@
 #SBATCH --output=trim_reads_%j.out
 pwd; hostname; date
 
+module load trimmomatic
 names="path_to_names_file"
 name=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "${names}")
 data="path/to/raw/reads/folder/"
 out="path/to/output/folder"
 adaptor="path/to/adaptor/file.txt"
+mkdir -p ${out}/logs
 
 trimmomatic PE -phred33 -threads 4 \
 ${data}sharedprefix_${name}_R1.fastq.gz \
