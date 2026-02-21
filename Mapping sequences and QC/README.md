@@ -102,10 +102,9 @@ sambamba flagstat ${DEDUP_BAM} \
 > ${OUTDIR}/statsQ${quality}/${name}
 ```  
 Lastly we estimated mean coverage of each individual using ```bedtools```  
-```
+```console
 bedtools genomecov \
-
-
-genomeCoverageBed -ibam ${path_out}${name}_sort_${Qual}_dup.bam -d | awk '{ total += $3 } END { print total/NR }' >  ${path_out}statsQ${Qual}/${name}_cov
-
+-ibm ${OUTDIR}${name}_sort_${quality}_dup.bam \
+-d | awk'{ total += $3 } END { print total/NR }' \
+> ${OUTDIR}stats!${quality}/${name}_cov
 ```
