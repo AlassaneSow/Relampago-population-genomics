@@ -14,14 +14,12 @@ pwd; hostname; date
 
 names="path_to_names_file"
 name=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "${names}")
-ref="path/to/reference.fasta"
+ref="path/to/indexed/reference.fasta"
 data="path/to/raw/reads/folder"
 OUTDIR="path/to/output/folder"
 TMPDIR="${SLURM_TMPDIR}/${name}"
-mkdir -p "$TMPDIR"
-
-mkdir -p "${OUTDIR}"
 mkdir -p "${TMPDIR}"
+mkdir -p "${OUTDIR}"
 
 module load bwa
 module load sambamba
@@ -36,5 +34,5 @@ bwa mem -M -t ${SLURM_CPUS_PER_TASK} \
     -t ${SLURM_CPUS_PER_TASK} \
     -l 0 \
     -m 10GB \
-    --tmpdir ${TMPDIR} \
+    --tmpdir "${TMPDIR}" \
     -o "${OUTDIR}/${name}.sorted.bam"
