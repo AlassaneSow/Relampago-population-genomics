@@ -62,7 +62,7 @@ ${data}${name}_2.trim.fq.gz \
 -R "@RG\tID:${name}\tSM:${name}\tPL:Illumina" > ${OUTDIR}/${name}.sam
 ```  
 We then converted the sam files to bams using ```sambamba```  
-```
+```console
 sambamba view -t 4 \
 -S ${TMPDIR}/${name}.sam \
 -f bam \
@@ -75,13 +75,37 @@ sambamba view -t 4 \
 -m 10GB \
 --tmpdir ${TMPDIR} > ${OUTDIR}/${name}.sort.bam
 ```  
-We then assesed the mapping quality and filtered reads using ```sambamba```  
-```
-sambamba flagstat ${TMPDIR}/${name}.sort.bam > ${path_out}stats/${name}
+We then assesed the mapping statisitcs and filtered low quality alignments using ```sambamba``` and ```gatk```  
+```console
+sambamba flagstat ${data}/${name}.sort.bam \
+> ${OUTDIR}/stats/${name}
+
+sambamba view \
+-F "mapping_quality >= ${quality}" \
+-t ${SLURM_CPUS_PER_TASK} \
+-f bam \
+-l 0 \
+${data}/${name}.sort.bam \
+-o ${TMP_BAM}
+
+gatk MarkDuplicates \
+--TMP_DIR=${TMPDIR} \
+--INPUT=${TMP_BAM} \
+--OUTPUT=${DEDUP_BAM} \
+--METRICS_FILE=${OUTDIR}/stats_dup/${name} \
+--VALIDATION_STRINGENCY=LENIENT \
+--MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1024
+
+sambamba index ${DEDUP_BAM}
+
+sambamba flagstat ${DEDUP_BAM} \
+> ${OUTDIR}/statsQ${quality}/${name}
 ```  
-Mapping statistics after filtering   
+Lastly we estimated mean coverage of each individual using ```bedtools```  
 ```
-```  
-Estimate mean coverage of each individual using ```bedtools```  
-```
+bedtools genomecov \
+
+
+genomeCoverageBed -ibam ${path_out}${name}_sort_${Qual}_dup.bam -d | awk '{ total += $3 } END { print total/NR }' >  ${path_out}statsQ${Qual}/${name}_cov
+
 ```
