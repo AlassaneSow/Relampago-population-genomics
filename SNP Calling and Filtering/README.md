@@ -124,6 +124,7 @@ vcftools \
 --recode --recode-INFO-all \
 --stdout | bgzip > complete_filtered_SNPS.vcf.gz
 ```
+# To plot the SNP quality data see module 6 code. 
 
 Optional filtering based on the analysis and quality of the data. See [Treindl et al. 2023](https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2023.1129867/full):
 * Remove SNPs with >30% missing in one population (I will have to check if missigness is wildly uneven prior to doing this)
