@@ -27,29 +27,35 @@ writeRaster(bioclim_reduced,
             filename = "bioclim_reduced.tif", 
             overwrite = TRUE)
 ```
-These variables had a spearmens correlation coefficiet > 0.7 and were removed: 
-wc2.1_2.5m_bio_1 - Annual Mean Temperature
-wc2.1_2.5m_bio_10 - Mean Temperature of Warmest Quarter
-wc2.1_2.5m_bio_11 - Mean Temperature of the Coldest Quarter
-wc2.1_2.5m_bio_14 - Percipitation of Driest Month
-wc2.1_2.5m_bio_15 - Percipitation Seasonality
-wc2.1_2.5m_bio_16 - Percipitation of Wettest Quarter
-wc2.1_2.5m_bio_17 - Percipitation of Driest Quarter
-wc2.1_2.5m_bio_18 - Precipitation of Warmest Quarter
-wc2.1_2.5m_bio_4 - Temperature Seasonality
-wc2.1_2.5m_bio_6 - Min Temperature of Coldest Month
-wc2.1_2.5m_bio_7 - Temperature Annual Range (BIO5-BIO6)
+## The following variables had a Spearmen's correlation coefficiet > 0.7 and were removed: 
+|  Bioclimatic Variable ID | Bioclimatic Variable |
+| ------------- | ------------- |
+wc2.1_2.5m_bio_1 | Annual Mean Temperature
+wc2.1_2.5m_bio_10 | Mean Temperature of Warmest Quarter
+wc2.1_2.5m_bio_11  | Mean Temperature of the Coldest Quarter
+wc2.1_2.5m_bio_14  |Percipitation of Driest Month
+wc2.1_2.5m_bio_15 | Percipitation Seasonality
+wc2.1_2.5m_bio_16 | Percipitation of Wettest Quarter
+wc2.1_2.5m_bio_17 | Percipitation of Driest Quarter
+wc2.1_2.5m_bio_18 | Precipitation of Warmest Quarter
+wc2.1_2.5m_bio_4 | Temperature Seasonality
+wc2.1_2.5m_bio_6 | Min Temperature of Coldest Month
+wc2.1_2.5m_bio_7 | Temperature Annual Range (BIO5-BIO6)
 
-We are left with eight variables:
-wc2.1_2.5m_bio_12 - Annual Precipitation
-wc2.1_2.5m_bio_13 - Precipitation of Wettest Month
-wc2.1_2.5m_bio_19 -  Precipitation of Coldest Quarter
-wc2.1_2.5m_bio_2 - Mean Diurnal Range (Mean of monthly (max temp - min temp))
-wc2.1_2.5m_bio_3 - Isothermality 
-wc2.1_2.5m_bio_5 -  Max Temperature of Warmest Month
-wc2.1_2.5m_bio_8 - Mean Temperature of Wettest Quarter
-wc2.1_2.5m_bio_9 - Mean Temperature of Driest Quarter
-Now we can use maxent
+## We are left with eight variables -
+|  Bioclimatic Variable ID | Bioclimatic Variable |
+| ------------- | ------------- |
+wc2.1_2.5m_bio_12 | Annual Precipitation
+wc2.1_2.5m_bio_13 | Precipitation of Wettest Month
+wc2.1_2.5m_bio_19  | Precipitation of Coldest Quarter
+wc2.1_2.5m_bio_2 | Mean Diurnal Range (Mean of monthly (max temp - min temp))
+wc2.1_2.5m_bio_3 | Isothermality 
+wc2.1_2.5m_bio_5 |  Max Temperature of Warmest Month
+wc2.1_2.5m_bio_8 | Mean Temperature of Wettest Quarter
+wc2.1_2.5m_bio_9 | Mean Temperature of Driest Quarter
+
+## Now we can use maxent
+### First we load in the occurence data.
 ```r
 setwd("S:/Smith Lab/Alassane/Main/Relampago Blight/WorldClim/wc2.1_2.5m_bio/")
 library(maxnet)
@@ -57,8 +63,9 @@ library(terra)
 library(raster)
 occ <- read.csv("S:/Smith Lab/Alassane/Main/Relampago Blight/WorldClim/Parvodontia_occurences.csv")
 occ <- occ[, colSums(is.na(occ)) == 0]
-
-# Extract presence values
+```
+### Then we extract the bioclim variables at each collection site ```terra```. 
+```r
 pres_vals <- terra::extract(bioclim_reduced, occ[, c("longitude","latitude")])
 
 # Sample background values
