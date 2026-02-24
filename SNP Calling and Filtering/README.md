@@ -4,19 +4,8 @@ This code was largely based on the methods described by [Treindl et al. 2023](ht
 ### Required Files
 Input - BAM file containing reads   
 Reference - Reference genome 
-### Required Programs
-Genome Analysis Toolkit ```gatk```
-```console
-module load gatk/4.6.2.0  
-```
-VCFtools ```vcftools```
-```console
-module load vcftools/0.1.16
-```
-BCFtools ```bcftools```
-```console
-module load bcftools/1.22
-```
+### Required Scripts
+HCall.sh
 ## First we call variants using ```HaplotypeCaller```    
 
 Because ```HaplotypeCaller``` can only handle one sample at a time we need to call each alignment one at a time. To do this we created a list file containing every alignment.   
@@ -58,30 +47,58 @@ done > gvcf_map.txt
 ## After calling variants, we preform joint genotyping using ```GenotypeGVCFs``` 
 ```console
 gatk GenotypeGVCFs \
-  -R reference.fasta \
-  -V gendb://cohort_db \
-  -O cohort.vcf.gz
+-R reference.fasta \
+-V gendb://cohort_db \
+--include-non-variant-sites
+-O cohort.vcf.gz
 ```
-## For most of the analyses (e.g., PCA and ADMIXTURE) we need to only use SNPs. We extracted just the SNPs using ```SelectVariants```
+## Prior to any analysis we need to filter SNPs using ```VariantFiltration```, ```vcftools```, and  ```bcftools```. 
+
+Prior to any filtering we checked the quality of the SNPs. First we extract just SNPs from the vcf.gz
 ```console
 gatk SelectVariants \
 -R reference.fasta \
 -V cohort.vcf.gz \
---select-type-to-include SNP \
---exclude-non-variants \
---exclude-filtered \
--O unfiltered_SNPS.vcf.gz
+-selectType SNP \
+-o cohort_all_SNPs.vcf.gz
 ```
-## To calculate the population statistics in ```pixy``` we need to keep both SNPs and invariant sites. We simply ran the same command without the exclude-non-variants and --select-type-to-include commands. 
+Then we extract the quality metrics from the vcf.gz
 ```console
-gatk SelectVariants \
+gatk VariantsToTable \
 -R reference.fasta \
--V cohort.vcf.gz \
---exclude-filtered \
--O unfiltered_SNPS.vcf.gz
+-V cohort_all_SNPs.vcf.gz \
+-F CHROM -F POS -F QUAL -F QD -F DP -F MQ -F MQRankSum -F FS -F ReadPOSRankSum -F SOR \
+--allowMissingData \
+-o SNP_Scores.table
 ```
-# Note to self to filter quality first then seperate variant and invariant sites.
-## Prior to any analysis we need to filter SNPs using ```VariantFiltration```, ```vcftools```, and  ```bcftools```
+Lastly, we plot the quality metrics in R.
+```r
+library('gridExtra')
+library('ggplot2')
+
+SNPs <- read.csv("path/to/SNP_Scores.table")
+
+DP <- ggplot(SNPS, aes(x=DP, fill=purple))+
+      geom_density(alpha=0.3)
+
+QD <- ggplot(SNPS, aes(x=QD, fill=purple))+
+      geom_density(alpha=0.3)
+
+FS <- ggplot(SNPS, aes(x=FS, fill=purple))+
+      geom_density(alpha=0.3)
+
+MQ <- ggplot(SNPS, aes(x=MQ, fill=purple))+
+      geom_density(alpha=0.3)
+
+MQRankSum <- ggplot(SNPS, aes(x=MQRankSum, fill=purple))+
+      geom_density(alpha=0.3)
+
+SOR <- ggplot(SNPS, aes(x=SOR, fill=purple))+
+      geom_density(alpha=0.3)
+
+ReadPosRankSum <- ggplot(SNPS, aes(x=ReadPosRankSum, fill=purple))+
+      geom_density(alpha=0.3)
+```
 
 We used ```VariantFiltration``` to remove SNPs with low quality metrics as defined in the GATK Best Practices Workflow. 
 
@@ -89,17 +106,18 @@ We used ```VariantFiltration``` to remove SNPs with low quality metrics as defin
 SNP ="path to variant output"
 REF ="/path_to_reference"  
 ```
-
 ```console
 gatk VariantFiltration \
 -R ${REF} \
 -V ${SNP} \
--O ${SNP}/filtered_SNPS.vcf \
+-O ${SNP}/all_sites_filtered.vcf.gz \
 --filter "MQ < 40.0" --filter-name "MQ" \
 --filter "FS > 60.0" --filter-name "FS" \
 --filter "QD < 2" --filter-name "QD" \
 ```
-
+```console
+bcftools view -f PASS all_sites_filtered.vcf.gz -Oz -o cohort_all_sites_PASS.vcf.gz
+```
 Afterwards we use ```vcftools``` and ```bcftoools``` to remove uninformative SNPs. We...
 * kept only chromosonal SNPs
 * removed those with >5% missing data
@@ -107,11 +125,15 @@ Afterwards we use ```vcftools``` and ```bcftoools``` to remove uninformative SNP
 * removed those with ead depth >75
 * Isolates with >80% missing data
 
+Remove non-chromosomal sites
 ```console
 bcftools view \
 -r Chr1,Chr2..... \
 filtered_SNPS.vcf.gz -Oz -o nuclear_filtered_SNPS.vcf.gz
 ```
+Note: In the command above you can use -R and give a list of chromosome names rather than typing them out.
+
+Filtering based on quality
 ```console
 vcftools \
 --gzvcf nuclear_filtered_SNPS.vcf.gz \ 
@@ -124,13 +146,13 @@ vcftools \
 --recode --recode-INFO-all \
 --stdout | bgzip > complete_filtered_SNPS.vcf.gz
 ```
-# To plot the SNP quality data see module 6 code. 
+## For most of the analyses (e.g., PCA and ADMIXTURE) we need  a file that contains only SNPs. We extracted them from the vcf.gz using ```bcftools```
+```console
+bcftools view -v snps cohort_all_sites_PASS.vcf.gz \
+  -Oz -o cohort_variants_only.vcf.gz
+```
+## To calculate the population statistics in ```pixy``` we need to keep both SNPs and invariant sites so we don't do anything. 
 
-Optional filtering based on the analysis and quality of the data. See [Treindl et al. 2023](https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2023.1129867/full):
-* Remove SNPs with >30% missing in one population (I will have to check if missigness is wildly uneven prior to doing this)
-* Remove SNPs with >80% missing data
-* --mac 3. This removes rare alleles and is likely optional. I Can retain for some analyses but probably important for selective sweep scans? Idk. 
-
-## Now that we've made a file containing informative, high-quality SNPs we can start analyzing the data. I chose to [LD prune](/Linkage%20Disequilibrium/README.md) the data first before analyzing the [population strucutre](/Population%20Structure/Population%20Structure.md). 
+## Now that we've made file containing informative, high-quality SNPs we can start analyzing the data. I chose to [LD prune](/Linkage%20Disequilibrium/README.md) the data first before analyzing the [population strucutre](/Population%20Structure/Population%20Structure.md). 
 
 
