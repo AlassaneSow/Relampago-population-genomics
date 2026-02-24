@@ -121,13 +121,13 @@ REF ="/path_to_reference"
 gatk VariantFiltration \
 -R ${REF} \
 -V ${SNP} \
--O ${SNP}/all_sites_filtered.vcf.gz \
+-O ${SNP}/all_sites_labled.vcf.gz \
 --filter "MQ < 40.0" --filter-name "MQ" \
 --filter "FS > 60.0" --filter-name "FS" \
 --filter "QD < 2" --filter-name "QD" \
 ```
 ```console
-bcftools view -f PASS all_sites_filtered.vcf.gz -Oz -o cohort_all_sites_PASS.vcf.gz
+bcftools view -f PASS all_sites_labeld.vcf.gz -Oz -o cohort_all_sites_VFfiltered.vcf.gz
 ```
 Afterwards we use ```vcftools``` and ```bcftoools``` to remove uninformative SNPs. We...
 * kept only chromosonal SNPs
