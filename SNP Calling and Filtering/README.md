@@ -54,7 +54,7 @@ gatk GenotypeGVCFs \
 ```
 ## Prior to any analysis we need to filter SNPs using ```VariantFiltration```, ```vcftools```, and  ```bcftools```. 
 
-Prior to any filtering we checked the quality of the SNPs. First we extract just SNPs from the vcf.gz
+### Prior to any filtering we checked the quality of the SNPs. First we extract just SNPs from the vcf.gz
 ```console
 gatk SelectVariants \
 -R reference.fasta \
@@ -79,28 +79,39 @@ library('ggplot2')
 SNPs <- read.csv("path/to/SNP_Scores.table")
 
 DP <- ggplot(SNPS, aes(x=DP, fill=purple))+
-      geom_density(alpha=0.3)
+      geom_density(alpha=0.3)+
+      geom_vline(xintercept=c(10,6200))
 
 QD <- ggplot(SNPS, aes(x=QD, fill=purple))+
-      geom_density(alpha=0.3)
+      geom_density(alpha=0.3)+
+      geom_vline(xintercept=2, size=0.7)
 
 FS <- ggplot(SNPS, aes(x=FS, fill=purple))+
       geom_density(alpha=0.3)
+      geom_vline(xintercept=60, size=0.7)
 
 MQ <- ggplot(SNPS, aes(x=MQ, fill=purple))+
-      geom_density(alpha=0.3)
+      geom_density(alpha=0.3)+
+      geom_vline(xintercept=40, size=0.7)
 
 MQRankSum <- ggplot(SNPS, aes(x=MQRankSum, fill=purple))+
       geom_density(alpha=0.3)
 
 SOR <- ggplot(SNPS, aes(x=SOR, fill=purple))+
       geom_density(alpha=0.3)
+      geom_vline(xintercept=4, size=0.7)
 
 ReadPosRankSum <- ggplot(SNPS, aes(x=ReadPosRankSum, fill=purple))+
-      geom_density(alpha=0.3)
+      geom_density(alpha=0.3)+
+      geom_vline(xintercept=c(10,-10), size=0.7)
+
+svg("path/to/output/QualityPlots.svg", height=20, width=15)
+theme_set(theme_gray(base_size = 18))
+grid.arrange(QD, DP, FS, MQ, MQRankSum, SOR, ReadPosRankSum, nrow=4)
+dev.off()
 ```
 
-We used ```VariantFiltration``` to remove SNPs with low quality metrics as defined in the GATK Best Practices Workflow. 
+### We used ```VariantFiltration``` to remove SNPs with low quality metrics as defined in the GATK Best Practices Workflow. 
 
 ```console
 SNP ="path to variant output"
@@ -146,12 +157,21 @@ vcftools \
 --recode --recode-INFO-all \
 --stdout | bgzip > complete_filtered_SNPS.vcf.gz
 ```
-## For most of the analyses (e.g., PCA and ADMIXTURE) we need  a file that contains only SNPs. We extracted them from the vcf.gz using ```bcftools```
+For most of the analyses (e.g., PCA and ADMIXTURE) we need  a file that contains only SNPs. We extracted them from the vcf.gz using ```bcftools```
 ```console
 bcftools view -v snps cohort_all_sites_PASS.vcf.gz \
   -Oz -o cohort_variants_only.vcf.gz
 ```
-## To calculate the population statistics in ```pixy``` we need to keep both SNPs and invariant sites so we don't do anything. 
+To calculate the population statistics in ```pixy``` we need to keep both SNPs and invariant sites so we don't do anything. 
+
+We started with X SNPs
+```console
+grep -vc "^#" cohort_all_SNPs.vcf.gz
+```
+and after all is said and done we are left with X SNPs
+```console
+grep -vc "^#" complete_filtered_SNPs.vcf.gz
+```
 
 ## Now that we've made file containing informative, high-quality SNPs we can start analyzing the data. I chose to [LD prune](/Linkage%20Disequilibrium/README.md) the data first before analyzing the [population strucutre](/Population%20Structure/Population%20Structure.md). 
 
