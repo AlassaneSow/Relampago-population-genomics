@@ -14,6 +14,16 @@ filtered vcf.gz
 module load plinkvXXX
 ```
 ## Linkage pruning
+We used ```plink``` to filter out SNPs in high LD (r2>0.2) by scanning 50kb windows in 10 bp steps.
+```console
+plink \
+--vcf ${VCF} \
+--double-id --allow-extra-chr \
+--set-missing-var-ids @:# \
+--indep-pariwise 50 10 0.2 \
+--out ${OUT}
+```
+We used this otput in our PCA analysis. 
 
 ## Measuring LD decay
 We used ```plink``` to measure LD decay for each population.  
