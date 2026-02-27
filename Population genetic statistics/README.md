@@ -28,12 +28,17 @@ To identify genes causing local adaptation we calculated F<sub>ST</sub> and d<su
 ```console
 awk '$3=="gene"{print $1"\t"$4"\t"$5}' path/to/reference.gff > genes.bed
 ```  
-We then calculated the statistics as follows  
+We calculated the statistics as follows  
 ```console
 pixy --stats fst dxy \  
 --vcf path/tp/data.vcf.gz \  
 --populations PCA_populations.txt \  
 --bed_file genes.bed \  
+```
+We then calculated the average F<sub>ST</sub> and d<sub>XY</sub> for each gene and each lineage
+```R
+library(tidyverse)
+mutate=
 ```
 To ensure we only retain significant divergent loci we only kept loci in the top 5% of both F<sub>ST</sub> and d<sub>XY</sub>
 ```R
