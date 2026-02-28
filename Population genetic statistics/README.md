@@ -65,7 +65,7 @@ write_tsv(data, "raw_divergent_loci.tsv")
 write_tsv(divergent_loci, "divergent_loci_fst_dxy.tsv")
 ```
 ### pcadapt
-First we have to create a .vcf that contains just SNPs in genic regions. We have to extract just genes from the gff
+First we have to create a .vcf that contains just SNPs in genic regions. To do this, we have to extract just genes from the gff
 ```console
 awk -F '\t' '$3=="gene"' path/to/reference.gff > genes.gff
 ```
