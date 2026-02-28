@@ -109,7 +109,7 @@ We used Bonferroni correction to retain only SNPs that are reliably and signific
 ```R
 sig_locally_adapted <- locally_adapted %>%
 mutate(p_adjusted = p.adjust(pvalues, method="bonferroni")) %>%
-filter(p_adjusted > 0.01)
+filter(p_adjusted < 0.01)
 write_tsv(sig_locally_adapted, "pcadapt_output.tsv")
 ```
 Last step is to combine everything into one file. 
