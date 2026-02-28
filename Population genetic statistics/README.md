@@ -23,7 +23,7 @@ Fak1  SF
 NATL4  NF
 ```
 ## Identifying highly divergent loci and genes
-To identify highly divergent loci, we calculated F<sub>ST</sub> and d<sub>XY</sub> for each gene in each lineage. We also used PCadapt which identifies locally adapted loci.   
+To identify highly divergent loci, we calculated F<sub>ST</sub> and d<sub>XY</sub> for each gene in each lineage and we used PCadapt to identify locally adapted loci. We then identified the genes that had SNPs that were the most signifincat in each of these methods.   
 ### F<sub>ST</sub> and d<sub>XY</sub>
 First we calculated F<sub>ST</sub> and d<sub>XY</sub> only in genic regions of the genome. To do this we created a .bed file containing the cordinates of all of the genic regions by filtering the GTF file to only include genes  
 ```console
@@ -65,7 +65,11 @@ write_tsv(data, "raw_divergent_loci.tsv")
 write_tsv(divergent_loci, "divergent_loci_fst_dxy.tsv")
 ```
 ### pcadapt
-First we have to create a .vcf that contains just SNPs in genic regions. 
+First we have to create a .vcf that contains just SNPs in genic regions. We have to extract just genes from the gff
+```console
+awk -F '\t' '$3=="gene"' path/to/reference.gff > genes.gff
+```
+and filter the vcf to only contain regions defined in the .gff
 ```console
 bedtools intersect -a input.vcf -b genes.gff -header -wa > output.vcf
 ```
@@ -108,4 +112,5 @@ mutate(p_adjusted = p.adjust(pvalues, method="bonferroni")) %>%
 filter(p_adjusted > 0.01)
 write_tsv(sig_locally_adapted, "pcadapt_output.tsv")
 ```
+Last step is to combine everything into one file. 
 
