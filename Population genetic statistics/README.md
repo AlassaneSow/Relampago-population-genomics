@@ -1,4 +1,4 @@
-# Calculating population summary statistics. 
+# Calculating population summary statistics and identifyinng local adaptation
 This code was largely based on the methods described by [Tremble et al. 2022](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.18521). Here we calculate nucleotide diversity (&pi;), the fixation index (F<sub>ST</sub>), absolute genetic divergence (d<sub>XY</sub>), and Taijama's D. To calculate sliding window size, see https://speciationgenomics.github.io/ld_decay/
 ## Required files
 Populations file
@@ -16,8 +16,7 @@ pixy --stats pi fst dxy tajima_d \
 --window_size 10000 \  
 --n_cores 2  
 ```
-The populations file is necessary to calculate F<sub>ST</sub> and d<sub>XY</sub>. To make this file we defined populations as either the geographic populations OR the populations detected by the PCA. We then compared these values to see if they are similar. 
-* If they are different I think I should determine Fst between the major geographic areas.
+The populations file is necessary to calculate F<sub>ST</sub> and d<sub>XY</sub>. To make this file we used the populations defined by the PCA. Below is an example of the file.
 ```
 ColS1  SF
 Fak1  SF
@@ -66,7 +65,11 @@ write_tsv(data, "raw_divergent_loci.tsv")
 write_tsv(divergent_loci, "divergent_loci_fst_dxy.tsv")
 ```
 ### pcadapt
-First we have to convert the .vcf to .bed so pcadapt can use it. 
+First we have to create a .vcf that contains just SNPs in genic regions. 
+```console
+bedtools intersect -a input.vcf -b genes.gff -header -wa > output.vcf
+```
+Then we have to convert the .vcf to .bed so pcadapt can use it. 
 ```console
 plink \
 --vcf ${VCF} \
