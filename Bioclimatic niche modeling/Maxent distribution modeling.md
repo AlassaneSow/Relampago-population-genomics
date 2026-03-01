@@ -1,16 +1,20 @@
-Loading and cropping WorldClim variables to just contain the SE US
+## Required packages
 ```r
 library(terra)
+library(corrplot)
+library(caret)
+library(maxnet)
+library(raster)
+```
+## Loading and cropping WorldClim variables to just contain the SE US
+```r
 tiffiles <- list.files("S:/Smith Lab/Alassane/Main/Relampago Blight/WorldClim/wc2.1_2.5m_bio/", pattern = ".tif$", full.names = TRUE)
 bioclim <-rast(tiffiles)
 se_extent <- ext(-91,-75,25,37)
 bioclim_se <- crop(bioclim, se_extent)
 ```
-Removing correlated bioclim variables
+## Removing correlated bioclim variables
 ```r
-library(terra)
-library(corrplot)
-library(caret)
 set.seed(12)
 sample_bioclim <- spatSample(bioclim_se, size=10000,
                              method= "random", 
@@ -57,33 +61,31 @@ wc2.1_2.5m_bio_9 | Mean Temperature of Driest Quarter
 ## Now we can use maxent
 ### First we load in the occurence data.
 ```r
-setwd("S:/Smith Lab/Alassane/Main/Relampago Blight/WorldClim/wc2.1_2.5m_bio/")
-library(maxnet)
-library(terra)
-library(raster)
 occ <- read.csv("S:/Smith Lab/Alassane/Main/Relampago Blight/WorldClim/Parvodontia_occurences.csv")
 occ <- occ[, colSums(is.na(occ)) == 0]
 ```
-### Then we extract the bioclim variables at each collection site ```terra```. 
+### Then we extract the bioclim variables at each collection site. 
 ```r
 pres_vals <- terra::extract(bioclim_reduced, occ[, c("longitude","latitude")])
+```
 
-# Sample background values
+### We sample background values
+```r
 bg_points <- terra::spatSample(bioclim_reduced, size=10000, method="random", xy=TRUE)
 bg_vals <- terra::extract(bioclim_reduced, bg_points[, c("x","y")])
-
-# Create response vector
+```
+### Then create a response vector and combine the predictor values
+```r
 y <- c(rep(1, nrow(pres_vals)), rep(0, nrow(bg_vals)))
-
-# Combine predictor values
 X <- rbind(pres_vals, bg_vals)
 rows_complete <- complete.cases(X)
 X_clean <- X[rows_complete, ]
 X_clean <- X_clean[, !colnames(X_clean) %in% "ID"]
 y_clean <- y[rows_complete]
-# Fit MaxEnt
+```
+### Then we make the maxent model, predict the habitat suitability, and plot. 
+```r
 model <- maxnet(y_clean, X_clean)
-# Predict Habitat Suitability
 bioclim_for_predict <- bioclim_reduced[[colnames(X_clean)]]
 prediction <- predict(bioclim_for_predict, model, type="cloglog", na.rm=TRUE)
 plot(prediction, main="MaxEnt Habitat Suitability (SE US)")
@@ -101,55 +103,4 @@ ggplot(pred_df, aes(x = x, y = y, fill = suitability)) +
   labs(title = "MaxEnt Habitat Suitability",
   fill = "Suitability") +
   theme_minimal() -> fullsample
-
-
-##########All the above is great but it is clearly skewed by the collections near Gainesville
-ggplot(occ, aes(y = latitude, x = longitude)) +
-  geom_point(data = occ) +
-  geom_sf(data = us_states, fill = NA, color = "black", size = 0.3, inherit.aes = FALSE) +
-  coord_sf(xlim = c(-90, -78), ylim = c(25, 35), expand = FALSE) +
-  labs(title = "Parvodontia relampaga collections")+
-  theme_minimal()
-##Below I randomly sample 100 of these points and then re-do the maxent analysis
-subsample <- occ[sample(nrow(occ), 100), ]
-#plot subsample
-ggplot(subsample, aes(y = latitude, x = longitude)) +
-  geom_point(subsample = occ) +
-  geom_sf(data = us_states, fill = NA, color = "black", size = 0.3, inherit.aes = FALSE) +
-  coord_sf(xlim = c(-90, -78), ylim = c(25, 35), expand = FALSE) +
-  labs(title = "Parvodontia relampaga collections")+
-  theme_minimal()
-#Re-do analysis and data prep
-sub_pres_vals <- terra::extract(bioclim_reduced, subsample[, c("longitude","latitude")])
-
-# Create response vector
-y <- c(rep(1, nrow(sub_pres_vals)), rep(0, nrow(bg_vals)))
-
-# Combine predictor values
-X <- rbind(sub_pres_vals, bg_vals)
-rows_complete <- complete.cases(X)
-X_clean <- X[rows_complete, ]
-X_clean <- X_clean[, !colnames(X_clean) %in% "ID"]
-y_clean <- y[rows_complete]
-# Fit MaxEnt
-model <- maxnet(y_clean, X_clean)
-# Predict Habitat Suitability
-bioclim_for_predict <- bioclim_reduced[[colnames(X_clean)]]
-prediction <- predict(bioclim_for_predict, model, type="cloglog", na.rm=TRUE)
-plot(prediction, main="MaxEnt Habitat Suitability (SE US)")
-
-pred_df <- as.data.frame(prediction, xy = TRUE)
-colnames(pred_df) <- c("x", "y", "suitability")
-
-ggplot(pred_df, aes(x = x, y = y, fill = suitability)) +
-  geom_raster() +
-  geom_sf(data = us_states, fill = NA, color = "black", size = 0.3, inherit.aes = FALSE) +
-  coord_sf(xlim = c(-90, -78), ylim = c(25, 35), expand = FALSE) +
-  scale_fill_viridis_c(option = "E") +
-  scale_size_continuous(limits = c(0,1))+
-  labs(title = "MaxEnt Habitat Suitability (100 Random Samples) ",
-  fill = "Suitability") +
-  theme_minimal() -> subsample
-
-# looks about the same!
 ```
