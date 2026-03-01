@@ -7,3 +7,6 @@ study effect of geographic distance on populations
 ## Required Programs
 
 To determine the population strucutre of _P. relampaga_ we used principal component analyses (PCA) with ```ADGENT``` and Bayesian clustering (STRUCTURE) with ```ADMIXTURE```
+## Principal component analysis (PCA)
+
+## STRUCTURE
