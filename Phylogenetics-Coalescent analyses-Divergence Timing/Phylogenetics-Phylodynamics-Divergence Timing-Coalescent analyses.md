@@ -9,7 +9,8 @@ Construct ML phylogenies using ```RAxML v8.0``` using GTRCAT nucleotide substitu
 ## Maximum clade credibility phylogenetic tree using BEAST (Chow)  
 First we need to estimate a mutation rate for each clade using TempEst
 ``  
-``  
+``
+## Neighbor joining trees with ADEGENET
 Then using BEAST under strict molecular clock and GTR substitution model run for 500 million MCMC steps we can make tree
 ## Evoloutionary rate and molecular dating of clades (Chow)
 
