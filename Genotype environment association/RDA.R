@@ -1,4 +1,9 @@
 #RDA
+library(adegenet)
+library(vcfR)
+library(tidyverse)
+library(caret)
+library(vegan)
 #Because RDA can not handle missing data, we need to perform mean imputation of missing alleles.
 #First, we create a matrix so we can modify the genlight object then we re-code the values for each allele
 geno_matrix <- as.matrix(data)  # individuals x SNPs
