@@ -3,7 +3,7 @@ https://r.qcbs.ca/workshop10/book-en/redundancy-analysis.html
 
 RDA and Univariate associations also annotate loci. Based on Sonstebo 2022.
 
-This is largely based on the Detecting multilocus adaptation using Redundancy Analysis (RDA) vignette in [Population Genetics in R](https://popgen.nescent.org/2018-03-27_RDA_GEA.html). 
+This is largely based on the Detecting multilocus adaptation using Redundancy Analysis (RDA) vignette in [Population Genetics in R](https://popgen.nescent.org/2018-03-27_RDA_GEA.html) and code provided by Krah et al 2026.
 Before using R, we have to reformat the data so it can be used. In the terminal we run: 
 ```console
 plink --tped yournameoffile.tped --tfam yournameoffile.tfam --recode A --out yournameoffile
