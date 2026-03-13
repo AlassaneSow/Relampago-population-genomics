@@ -36,7 +36,9 @@ First we use the `snmf2` function
 ```r
 snmf_result <- snmf(data, K=1:10, ploidy=2, entropy=T, alpha=100,project="new")
 ```
-## IBD
-calcuclate identity by state disrtacne matirxi between all pairs of undividuales uinsg plink with the --distance 1-ibs command. See Krah et al. 
 admixture proportions on map
 https://bookdown.org/hhwagner1/LandGenCourse_book/WE_9.html
+
+## IBD
+calcuclate identity by state disrtacne matirxi between all pairs of undividuales uinsg plink with the --distance 1-ibs command. See Krah et al. 
+Also calcualte pairwise genome-wide Fst and plot against distance as in Treindl et al.
