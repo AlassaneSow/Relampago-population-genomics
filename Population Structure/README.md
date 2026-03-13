@@ -1,11 +1,7 @@
-# PCA and STRUCTURE 
-normal stuff and   
-LD prune the dataset using PLINK.
-
-study effect of geographic distance on populations
+# PCA, STRUCTURE, isolation by distance 
 ## Required Files
 ## Required Programs
-
+## PCA
 To determine the population strucutre of _P. relampaga_ we used principal component analyses (PCA) with ```ADGENT``` and Bayesian clustering (STRUCTURE) with ```LEA```
 ## Principal component analysis (PCA)
 First we load the LD-pruned data as a genlight object. PLINK needs to have recodeA
@@ -40,6 +36,7 @@ First we use the `snmf2` function
 ```r
 snmf_result <- snmf(data, K=1:10, ploidy=2, entropy=T, alpha=100,project="new")
 ```
-
+## IBD
+calcuclate identity by state disrtacne matirxi between all pairs of undividuales uinsg plink with the --distance 1-ibs command. See Krah et al. 
 admixture proportions on map
 https://bookdown.org/hhwagner1/LandGenCourse_book/WE_9.html
