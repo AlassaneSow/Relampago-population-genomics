@@ -7,7 +7,7 @@
 #SBATCH --ntasks=1
 #SBATCH --array=1-100
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=12gb
+#SBATCH --mem=5gb
 #SBATCH --time=2:00:00
 #SBATCH --output=trim_reads_%j.out
 pwd; hostname; date
