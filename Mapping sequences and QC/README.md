@@ -48,6 +48,7 @@ ls sharedprefix_*_R1.fastq.gz | \
   sed 's/^sharedprefix_//' | \
   sed 's/_R1.fastq.gz$//' > names.txt
 ```
+This job runs failry fast, it only took about 10 minutes for 40 samples!
 ## Next we mapped reads to the _P. relampaga_ reference genome using ```bwa 0.7.19```  
 ```console
 bwa index path/to/reference.fa
