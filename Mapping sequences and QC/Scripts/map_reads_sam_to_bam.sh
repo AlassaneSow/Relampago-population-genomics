@@ -3,12 +3,12 @@
 #SBATCH --qos=plantpath
 #SBATCH --job-name=map_reads
 #SBATCH --mail-type=END,FAIL
-#SBATCH --mail-user=
+#SBATCH --mail-user=a.sow@ufl.edu
 #SBATCH --ntasks=1
 #SBATCH --array=1-100
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=16gb
-#SBATCH --time=12:00:00
+#SBATCH --mem=10gb
+#SBATCH --time=2:00:00
 #SBATCH --output=map_reads_%j.out
 pwd; hostname; date
 
