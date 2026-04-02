@@ -108,3 +108,14 @@ bedtools genomecov \
 -d | awk'{ total += $3 } END { print total/NR }' \
 > ${OUTDIR}stats!${quality}/${name}_cov
 ```
+To combine all the output into one table
+```console
+echo -e "SampleID\tCoverage" > combined_coverage.tsv
+```
+```console
+for f in *_coverage; do
+  sample=$(echo $f | sed 's/_coverage//')   # remove _coverage from filename
+  coverage=$(cat "$f")                      # read coverage value
+  echo -e "${sample}\t${coverage}" >> combined_coverage.tsv;
+done
+```
