@@ -60,8 +60,8 @@ gatk GenotypeGVCFs \
 --include-non-variant-sites
 -O cohort.vcf.gz
 ```
-## Next we analyze the quality of the SNPs before filtering. 
-### To do this we first extract just SNPs from the cohort.vcf.gz
+## Next, we analyze the quality of the SNPs before filtering. 
+To do this we first extract just SNPs from the cohort.vcf.gz
 ```console
 gatk SelectVariants \
 -R reference.fasta \
@@ -118,8 +118,11 @@ grid.arrange(QD, DP, FS, MQ, MQRankSum, SOR, ReadPosRankSum, nrow=4)
 dev.off()
 ```
 
-### Now, based on the information above and GATK recommendations, we can use ```VariantFiltration```, ```vcftools```, and  ```bcftools``` to remove low quality SNPs.   
+## Now, based on the information above and GATK recommendations, we can use ```VariantFiltration```, ```vcftools```, and  ```bcftools``` to remove low quality SNPs.   
 Please note that we use two different filtering schemes here. We **1) used site-level and genotype-level filters to make a file that contains just SNPs** (this will be used for most of our analyses) and **2) used less strict genotype-level filters that make sure we don't remove any invariant sites** (this output will be used for pixy which requires a file with variant & invariant sites).
+
+### Filtering for **SNPs ONLY**
+We use ```VariantFiltration``` to remove low quality SNPs
 ```console
 SNP ="path to variant output"
 REF ="/path_to_reference"  
@@ -143,7 +146,7 @@ Afterwards we use ```vcftools``` and ```bcftoools``` to remove uninformative SNP
 * removed those with read depth >75
 * Isolates with >80% missing data
 
-Remove non-chromosomal sites
+To remove non-chromosomal sites we run
 ```console
 bcftools view \
 -r Chr1,Chr2..... \
@@ -151,11 +154,11 @@ filtered_SNPS.vcf.gz -Oz -o nuclear_filtered_SNPS.vcf.gz
 ```
 Note: In the command above you can use -R and give a list of chromosome names rather than typing them out.
 
-Filtering based on quality
+To filtering based on quality we run
 ```console
 vcftools \
 --gzvcf nuclear_filtered_SNPS.vcf.gz \ 
---mac 3 \
+--mac 1 \ #this ensures we only keep SNPs
 --min-meanDP 10 \
 --max-missing 0.70 \
 --max-meanDP 75 \
@@ -164,25 +167,6 @@ vcftools \
 --recode --recode-INFO-all \
 --stdout | bgzip > complete_filtered_SNPS.vcf.gz
 ```
-Lastly, to make a file that contains only SNPs, we extracted them from the vcf.gz using ```bcftools```
-```console
-bcftools view -v snps cohort_all_sites_PASS.vcf.gz \
-  -Oz -o cohort_variants_only.vcf.gz
-```
-To calculate the population statistics in ```pixy``` we need to keep both SNPs and invariant sites so we don't do anything. Importanly the filtering above is strict and the MQ filters can remove invariant sites. So, for the pixy input we don't use those and filter like so.
-
-```console
-vcftools \
---gzvcf .vcf.gz \ 
---minGQ 20 \
---minDP 5 \
---min-meanDP 8 \
---max-meanDP 80 \
---max-missing 0.80 \
---recode --recode-INFO-all \
---stdout | bgzip > complete_filtered_SNPS.vcf.gz
-```
-
 We started with X SNPs
 ```console
 grep -vc "^#" cohort_all_SNPs.vcf.gz
@@ -192,10 +176,43 @@ and after all is said and done we are left with X SNPs
 grep -vc "^#" complete_filtered_SNPs.vcf.gz
 ```
 
-## Now that we've made file containing informative, high-quality SNPs we can start analyzing the data. I chose to [LD prune](/Linkage%20Disequilibrium/README.md) the data first before analyzing the [population strucutre](/Population%20Structure/Population%20Structure.md). 
+### Filtering for **invariant sites AND SNPs**
+To calculate the population statistics in ```pixy``` we need to keep both SNPs and invariant sites. Unfortunatley, the filtering above can remove invariant sites. So, for the pixy input, we filter just invariant sites and then combine that output with the file we made above.
+
+```console
+vcftools \
+--gzvcf .vcf.gz \
+--remove-indels \
+--max-maf 0 \ #this ensures we keep only invariant sites
+--minGQ 20 \
+--minDP 5 \
+--min-meanDP 8 \
+--max-meanDP 80 \
+--max-missing 0.80 \
+--recode --recode-INFO-all \
+--stdout | bgzip > complete_filtered_SNPS.vcf.gz
+```
+vcftools --gzvcf my_vcf.vcf.gz \
+--remove-indels \
+--max-missing 0.8 \
+--min-meanDP 20 \
+--max-meanDP 500 \
+--recode --stdout | gzip -c > my_filtered_vcf.vcf.gz
+
+```console
+bcftools view \
+-r Chr1,Chr2..... \
+filtered_SNPS.vcf.gz -Oz -o nuclear_filtered_SNPS.vcf.gz
+```
+# COMBINE THIS INVARINT FILE WITH THE SNP FILE
+## Now that we've made files containing informative, high-quality SNPs we can start analyzing the data. I chose to [LD prune](/Linkage%20Disequilibrium/README.md) the data first before analyzing the [population strucutre](/Population%20Structure/Population%20Structure.md). 
 
 
-    </td>
-  </tr>
-</table>
+
+NOTE THIS MIGHT NOT BE NECESSARY! 
+First we make a new file that **contains only SNPs** using ```bcftools```
+```console
+bcftools view -v snps cohort_all_sites_PASS.vcf.gz \
+  -Oz -o cohort_variants_only.vcf.gz
+```
 
