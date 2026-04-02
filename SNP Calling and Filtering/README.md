@@ -16,6 +16,11 @@ We also have to index the reference genome like so
 ```console
 samtools faidx /path/to/refernce/reference.fna
 ```
+```console
+gatk CreateSequenceDictionary \
+   -R /path/to/refernce/reference.fna \
+   -O /path/to/refernce/reference.dict
+```
 
 Then we ran ```HaplotypeCaller``` on all the alignments. See HCall.sh for the full script. Each variable is explained below. 
 ```console
