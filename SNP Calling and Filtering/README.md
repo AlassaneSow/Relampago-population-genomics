@@ -60,9 +60,9 @@ gatk GenotypeGVCFs \
 --include-non-variant-sites
 -O cohort.vcf.gz
 ```
-## Prior to any analysis we need to filter SNPs using ```VariantFiltration```, ```vcftools```, and  ```bcftools```. 
+## Next we filtered SNPs using ```VariantFiltration```, ```vcftools```, and  ```bcftools```. 
 
-### Prior to any filtering we checked the quality of the SNPs. First we extract just SNPs from the vcf.gz
+### Prior to any filtering we first checked the quality of the SNPs. To do this we first extract just SNPs from the cohort.vcf.gz
 ```console
 gatk SelectVariants \
 -R reference.fasta \
@@ -119,7 +119,7 @@ grid.arrange(QD, DP, FS, MQ, MQRankSum, SOR, ReadPosRankSum, nrow=4)
 dev.off()
 ```
 
-### We used ```VariantFiltration``` to remove SNPs with low quality metrics as defined in the GATK Best Practices Workflow. 
+### Now, based on the information above and GATK recommendations, we can use ```VariantFiltration``` to remove low quality SNPs. Please note that we use two different filtering schemes here, one for pixy that requries variatn+invariant sites, and one that just contains variants/SNPs.
 
 ```console
 SNP ="path to variant output"
@@ -141,7 +141,7 @@ Afterwards we use ```vcftools``` and ```bcftoools``` to remove uninformative SNP
 * kept only chromosonal SNPs
 * removed those with >5% missing data
 * removed those with read depth <10
-* removed those with ead depth >75
+* removed those with read depth >75
 * Isolates with >80% missing data
 
 Remove non-chromosomal sites
@@ -170,7 +170,19 @@ For most of the analyses (e.g., PCA and ADMIXTURE) we need  a file that contains
 bcftools view -v snps cohort_all_sites_PASS.vcf.gz \
   -Oz -o cohort_variants_only.vcf.gz
 ```
-To calculate the population statistics in ```pixy``` we need to keep both SNPs and invariant sites so we don't do anything. 
+To calculate the population statistics in ```pixy``` we need to keep both SNPs and invariant sites so we don't do anything. Importanly the filtering above is strict and the MQ filters can remove invariant sites. So, for the pixy input we don't use those and filter like so.
+
+```console
+vcftools \
+--gzvcf .vcf.gz \ 
+--minGQ 20 \
+--minDP 5 \
+--min-meanDP 8 \
+--max-meanDP 80 \
+--max-missing 0.80 \
+--recode --recode-INFO-all \
+--stdout | bgzip > complete_filtered_SNPS.vcf.gz
+```
 
 We started with X SNPs
 ```console
