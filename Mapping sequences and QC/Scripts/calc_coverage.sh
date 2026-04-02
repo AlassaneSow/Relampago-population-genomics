@@ -12,14 +12,23 @@
 #SBATCH --output=calc_coverage_%j.out
 set -euo pipefail
 pwd; hostname; date
-module load bedtools
+
+ml bedtools
 names="path_to_names_file"
 name=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "${names}")
 quality=20
-OUTDIR="path/to/folder/with/${name}_sort_${quality}_dup.bam/"
-mkdir -p ${OUTDIR}stats!${quality}
+data="path/to/filtered_assemblies"
+OUTDIR="/path/to/coverage"
 
 bedtools genomecov \
--ibm ${OUTDIR}${name}_sort_${quality}_dup.bam \
--d | awk'{ total += $3 } END { print total/NR }' \
-> ${OUTDIR}stats!${quality}/${name}_cov
+-ibam ${data}/${name}_sort_${quality}_dup.bam \
+-d | awk '{ total += $3 } END { print total/NR }' \
+> ${OUTDIR}/${name}_coverage
+
+cd ${OUTDIR}
+echo -e "SampleID\tCoverage" > combined_coverage.tsv
+for f in *_coverage; do
+  sample=$(echo $f | sed 's/_coverage//')   
+  coverage=$(cat "$f")                      
+  echo -e "${sample}\t${coverage}" >> combined_coverage.tsv;
+done
