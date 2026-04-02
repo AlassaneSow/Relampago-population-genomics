@@ -60,9 +60,8 @@ gatk GenotypeGVCFs \
 --include-non-variant-sites
 -O cohort.vcf.gz
 ```
-## Next we filtered SNPs using ```VariantFiltration```, ```vcftools```, and  ```bcftools```. 
-
-### Prior to any filtering we first checked the quality of the SNPs. To do this we first extract just SNPs from the cohort.vcf.gz
+## Next we analyze the quality of the SNPs before filtering. 
+### To do this we first extract just SNPs from the cohort.vcf.gz
 ```console
 gatk SelectVariants \
 -R reference.fasta \
@@ -119,8 +118,8 @@ grid.arrange(QD, DP, FS, MQ, MQRankSum, SOR, ReadPosRankSum, nrow=4)
 dev.off()
 ```
 
-### Now, based on the information above and GATK recommendations, we can use ```VariantFiltration``` to remove low quality SNPs. Please note that we use two different filtering schemes here, one for pixy that requries variatn+invariant sites, and one that just contains variants/SNPs.
-
+### Now, based on the information above and GATK recommendations, we can use ```VariantFiltration```, ```vcftools```, and  ```bcftools``` to remove low quality SNPs.   
+Please note that we use two different filtering schemes here. We **1) used site-level and genotype-level filters to make a file that contains just SNPs** (this will be used for most of our analyses) and **2) used less strict genotype-level filters that make sure we don't remove any invariant sites** (this output will be used for pixy which requires a file with variant & invariant sites).
 ```console
 SNP ="path to variant output"
 REF ="/path_to_reference"  
@@ -165,7 +164,7 @@ vcftools \
 --recode --recode-INFO-all \
 --stdout | bgzip > complete_filtered_SNPS.vcf.gz
 ```
-For most of the analyses (e.g., PCA and ADMIXTURE) we need  a file that contains only SNPs. We extracted them from the vcf.gz using ```bcftools```
+Lastly, to make a file that contains only SNPs, we extracted them from the vcf.gz using ```bcftools```
 ```console
 bcftools view -v snps cohort_all_sites_PASS.vcf.gz \
   -Oz -o cohort_variants_only.vcf.gz
@@ -195,4 +194,8 @@ grep -vc "^#" complete_filtered_SNPs.vcf.gz
 
 ## Now that we've made file containing informative, high-quality SNPs we can start analyzing the data. I chose to [LD prune](/Linkage%20Disequilibrium/README.md) the data first before analyzing the [population strucutre](/Population%20Structure/Population%20Structure.md). 
 
+
+    </td>
+  </tr>
+</table>
 
