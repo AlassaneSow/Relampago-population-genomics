@@ -6,8 +6,8 @@
 #SBATCH --mail-user=
 #SBATCH --ntasks=1
 #SBATCH --array=1-100
-#SBATCH --cpus-per-task=4
-#SBATCH --mem=16gb
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=3gb
 #SBATCH --time=12:00:00
 #SBATCH --output=calc_coverage_%j.out
 set -euo pipefail
