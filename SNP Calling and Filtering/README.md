@@ -22,15 +22,14 @@ gatk CreateSequenceDictionary \
    -O /path/to/refernce/reference.dict
 ```
 
-Then we ran ```HaplotypeCaller``` on all the alignments. See HCall.sh for the full script. Each variable is explained below. 
+Then we ran ```HaplotypeCaller``` on all the alignments. Each variable is explained below. 
 ```console
-REF="/path_to_reference"  
-BAM_LIST="/path_to_bam_list.txt"  
-OUT="/path_to_output_gvcf folder"
-BAM=$(sed -n "${SLURM_ARRAY_TASK_ID}p" $BAM_LIST)
-SAMPLE=$(basename "$BAM" .bam)
+REF="/path/to/reference.fna"
+names="/path/to/names.txt"
+OUT="path/to/snp_calling_folder"
+name=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "${names}")
+BAM="/path/to/filtered_assemblies"
 ```
-
 ```console
 gatk HaplotypeCaller \   
 -R ${REF} \  
