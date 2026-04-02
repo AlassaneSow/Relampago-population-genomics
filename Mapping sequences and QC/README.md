@@ -119,3 +119,4 @@ for f in *_coverage; do
   echo -e "${sample}\t${coverage}" >> combined_coverage.tsv;
 done
 ```
+Now we can use these files to call SNPs! 
