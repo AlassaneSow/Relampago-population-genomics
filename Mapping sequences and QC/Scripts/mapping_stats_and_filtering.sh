@@ -7,7 +7,7 @@
 #SBATCH --ntasks=1
 #SBATCH --array=1-100
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=16gb
+#SBATCH --mem=20gb
 #SBATCH --time=12:00:00
 #SBATCH --output=stats_and_filtering_%j.out
 set -euo pipefail
@@ -39,13 +39,17 @@ sambamba view \
 ${data}/${name}.sort.bam \
 -o ${TMP_BAM}
 
+echo "TMPDIR=${TMPDIR}"
+echo "TMP_BAM=${TMP_BAM}"
+echo "DEDUP_BAM=${DEDUP_BAM}"
+
 gatk MarkDuplicates \
---TMP_DIR=${TMPDIR} \
---INPUT=${TMP_BAM} \
---OUTPUT=${DEDUP_BAM} \
---METRICS_FILE=${OUTDIR}/stats_dup/${name} \
---VALIDATION_STRINGENCY=LENIENT \
---MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1024
+--TMP_DIR "${TMPDIR}" \
+--INPUT "${TMP_BAM}" \
+--OUTPUT "${DEDUP_BAM}" \
+--METRICS_FILE "${OUTDIR}/stats_dup/${name}" \
+--VALIDATION_STRINGENCY LENIENT \
+--MAX_FILE_HANDLES_FOR_READ_ENDS_MAP 1024
 
 sambamba index ${DEDUP_BAM}
 
