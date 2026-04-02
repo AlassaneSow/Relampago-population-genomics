@@ -12,6 +12,10 @@ Because ```HaplotypeCaller``` can only handle one sample at a time we need to ca
 ```console
 ls /path_to_alignments/*bam > bam_list.txt
 ```
+We also have to index the reference genome like so
+```console
+samtools faidx /path/to/refernce/reference.fna
+```
 
 Then we ran ```HaplotypeCaller``` on all the alignments. See HCall.sh for the full script. Each variable is explained below. 
 ```console
