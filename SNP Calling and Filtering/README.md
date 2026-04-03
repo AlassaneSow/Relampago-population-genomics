@@ -46,9 +46,9 @@ gatk GenomicsDBImport \
 ```
 To make the gvcf_map.txt, simply run this in the HaplotypeCaller output directory  
 ```console
-for gvcf in *.g.vcf.gz; do
-  sample=$(basename "$gvcf" .g.vcf.gz)
-  echo -e "${sample}\t$(pwd)/${gvcf}"
+for f in *.g.vcf.gz; do 
+    sample=$(basename "$f" .g.vcf.gz)
+    echo -e "${sample}\t$(pwd)/${f}"
 done > gvcf_map.txt
 ```  
 
