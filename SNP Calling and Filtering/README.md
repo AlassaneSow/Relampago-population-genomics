@@ -79,7 +79,7 @@ combine_gvcf_28667660.out  combine_gvcf_28670713.out  haplotypecaller.sh  map_sa
 [a.sow@login7 jobs]$ cd /blue/plp6235/asow/Fomotopsis/ref/
 [a.sow@login7 ref]$ ml samtools
 [a.sow@login7 ref]$ samtools faidx /blue/plp6235/asow/Fomotopsis/ref/fomotopsis_reference.fna
-[a.sow@login7 ref]$ cut -f1,2 /blue/plp6235/asow/Fomotopsis/ref/fomotopsis_reference.fna.fai > genome_intervals.list
+awk '{print $1 ":" 1 "-" $2}' /blue/plp6235/asow/Fomotopsis/ref/fomotopsis_reference.fna.fai > /blue/plp6235/asow/Fomotopsis/ref/genome_intervals.list
 [a.sow@login7 ref]$ nano genome_intervals.list
 ```
 
