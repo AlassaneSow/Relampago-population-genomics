@@ -1,36 +1,50 @@
-library('gridExtra')
-library('ggplot2')
+library(gridExtra)
+library(ggplot2)
+setwd("")
+SNPS <- read.table("raw_snp_scores.table", header=TRUE)
 
-SNPs <- read.csv("path/to/SNP_Scores.table")
-
-DP <- ggplot(SNPS, aes(x=DP, fill=purple))+
-      geom_density(alpha=0.3)+
+png("DP.png", height=2000, width=1500)
+DP <- ggplot(SNPS, aes(x=DP))+
+      geom_density(fill = "purple", alpha=0.3)+
       geom_vline(xintercept=c(10,6200))
+print(DP)
+dev.off()
 
-QD <- ggplot(SNPS, aes(x=QD, fill=purple))+
-      geom_density(alpha=0.3)+
+png("QD.png", height=2000, width=1500)
+QD <- ggplot(SNPS, aes(x=QD))+
+      geom_density(fill = "purple", alpha=0.3)+
       geom_vline(xintercept=2, size=0.7)
+print(QD)
+dev.off()
 
-FS <- ggplot(SNPS, aes(x=FS, fill=purple))+
-      geom_density(alpha=0.3)
+png("FS.png", height=2000, width=1500)
+FS <- ggplot(SNPS, aes(x=FS))+
+      geom_density(fill = "purple", alpha=0.3)+
       geom_vline(xintercept=60, size=0.7)
+print(FS)
+dev.off()
 
-MQ <- ggplot(SNPS, aes(x=MQ, fill=purple))+
-      geom_density(alpha=0.3)+
+png("MQ.png", height=2000, width=1500)
+MQ <- ggplot(SNPS, aes(x=MQ))+
+      geom_density(fill = "purple",alpha=0.3)+
       geom_vline(xintercept=40, size=0.7)
+print(MQ)
+dev.off()
 
-MQRankSum <- ggplot(SNPS, aes(x=MQRankSum, fill=purple))+
-      geom_density(alpha=0.3)
+png("MQRankSum.png", height=2000, width=1500)
+MQRankSum <- ggplot(SNPS, aes(x=MQRankSum))+
+      geom_density(fill = "purple", alpha=0.3)
+print(MQRankSum)
+dev.off()
 
-SOR <- ggplot(SNPS, aes(x=SOR, fill=purple))+
-      geom_density(alpha=0.3)
+png("SOR.png", height=2000, width=1500)
+SOR <- ggplot(SNPS, aes(x=SOR))+
+      geom_density(fill = "purple",alpha=0.3)+
       geom_vline(xintercept=4, size=0.7)
+print(SOR)
+dev.off()
 
-ReadPosRankSum <- ggplot(SNPS, aes(x=ReadPosRankSum, fill=purple))+
-      geom_density(alpha=0.3)+
-      geom_vline(xintercept=c(10,-10), size=0.7)
-
-svg("path/to/output/QualityPlots.svg", height=20, width=15)
+png("snp_quality_plots.png", height=2000, width=1500)
 theme_set(theme_gray(base_size = 18))
-grid.arrange(QD, DP, FS, MQ, MQRankSum, SOR, ReadPosRankSum, nrow=4)
+grid.arrange(QD, DP, FS, MQ, MQRankSum, SOR, nrow=4)
 dev.off()
