@@ -119,4 +119,5 @@ for f in *_coverage; do
   echo -e "${sample}\t${coverage}" >> combined_coverage.tsv;
 done
 ```
+# NOTE TO SELF TO ADD SOME CODE TO EXTRACT %READS MAPPED FROM FLAGSTAT INTO A TABLE
 Now we can use these files to call SNPs! 
