@@ -44,9 +44,19 @@ scale_color_manual(values=c("red","white"))
 ```
 To see how we made the final PCA for the publication, see PCA.R
 ## STRUCTURE
-First we use the `snmf2` function 
+First we load the vcf, extract geontypes, and use the vcf_to_lea function to convert to a format LEA can use. 
 ```r
-snmf_result <- snmf(data, K=1:10, ploidy=2, entropy=T, alpha=100,project="new")
+vcf <- read.vcfR(".vcf.gz")
+genotypes <- extract.gt(vcf, element="GT", as.numeric=TRUE)
+
+vcf_to_lea <- function(genotypes, output_file) {
+  # Convert missing data (NA) to 9 (LEA's missing data code)
+  genotypes[is.na(genotypes)] <- 9
+  # Write to a .geno file
+  write.table(genotypes, file = output_file, sep = "", quote = FALSE, col.names = FALSE, row.names = FALSE)
+}
+vcf_to_lea(geontypes, "LEA_genotypes_for_strucutre.geno")
+obs <- snmf(".geno", K = 1:10, repetitions = 10, entropy = TRUE, project = "new", CPU = 12)
 ```
 admixture proportions on map
 https://bookdown.org/hhwagner1/LandGenCourse_book/WE_9.html
