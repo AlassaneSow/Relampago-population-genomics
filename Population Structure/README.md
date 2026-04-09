@@ -7,6 +7,7 @@ library(vcfR)
 library(tidyverse)
 library(caret)
 library(vegan)
+library(LEA)
 ```
 ## PCA
 To determine the population strucutre of _P. relampaga_ we used principal component analyses (PCA) with ```ADGENT``` and Bayesian clustering (STRUCTURE) with ```LEA```
@@ -57,6 +58,10 @@ vcf_to_lea <- function(genotypes, output_file) {
 }
 vcf_to_lea(geontypes, "LEA_genotypes_for_strucutre.geno")
 obs <- snmf(".geno", K = 1:10, repetitions = 10, entropy = TRUE, project = "new", CPU = 12)
+```
+Note that you can always re-load the snmf output and that you should only have to run the analysis once. 
+```
+obs <- load.snmf(".smnfproject)
 ```
 admixture proportions on map
 https://bookdown.org/hhwagner1/LandGenCourse_book/WE_9.html
