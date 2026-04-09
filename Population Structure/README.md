@@ -4,6 +4,7 @@
 ## PCA
 To determine the population strucutre of _P. relampaga_ we used principal component analyses (PCA) with ```ADGENT``` and Bayesian clustering (STRUCTURE) with ```LEA```
 ## Principal component analysis (PCA)
+# NOTE TO SELF TO ADD SEBASTIAN ET AL WORKBOOK NOTES TO THE SCRIPTS FOLDER
 First we load the LD-pruned data as a genlight object. PLINK needs to have recodeA
 ```r
 library(adegenet)
