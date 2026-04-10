@@ -61,7 +61,7 @@ obs <- snmf(".geno", K = 1:10, repetitions = 10, entropy = TRUE, project = "new"
 ```
 Note that you can always re-load the snmf output and that you should only have to run the analysis once. 
 ```
-obs <- load.snmf(".smnfproject)
+obs <- load.snmfProject(".snmfProject")
 ```
 admixture proportions on map
 https://bookdown.org/hhwagner1/LandGenCourse_book/WE_9.html
