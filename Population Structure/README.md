@@ -48,7 +48,7 @@ To see how we made the final PCA for the publication, see PCA.R
 First we load the vcf, extract geontypes, and use the vcf_to_lea function to convert to a format LEA can use. 
 ```r
 vcf <- read.vcfR(".vcf.gz")
-genotypes <- extract.gt(vcf, element="GT", as.numeric=TRUE)
+genotypes <- extract.gt(vcf, element="GT", as.numeric=TRUE) #save this an an RDS. Very important!
 
 vcf_to_lea <- function(genotypes, output_file) {
   # Convert missing data (NA) to 9 (LEA's missing data code)
@@ -57,11 +57,41 @@ vcf_to_lea <- function(genotypes, output_file) {
   write.table(genotypes, file = output_file, sep = "", quote = FALSE, col.names = FALSE, row.names = FALSE)
 }
 vcf_to_lea(geontypes, "LEA_genotypes_for_strucutre.geno")
+```
+We then ran the snmf algorithm
+```r
 obs <- snmf(".geno", K = 1:10, repetitions = 10, entropy = TRUE, project = "new", CPU = 12)
-```
-Note that you can always re-load the snmf output and that you should only have to run the analysis once. 
-```
+#Note that you can always re-load the snmf output. 
 obs <- load.snmfProject(".snmfProject")
+```
+The cross-entropy plot shows a clear "elbow" at K=X
+```r
+Fp_cross_entropy <- data.frame(t(summary(obs)$crossEntropy), K = 1:5, species = "Fp")
+
+Kplot <- ggplot(Fp_cross_entropy, aes(x=K, y=mean))+
+geom_line()+
+labs(x="K", y="Cross entropy")+
+scale_x_continuous(breaks=1:5)
+```
+We extracted the data from the run at K=2 with the lowest cross entropy and made plots like so.
+```r
+ce = cross.entropy(obs, K = 2)
+best = which.min(ce)
+
+Q_matrix <- Q(obs, K=2, run = best)
+K2_bar <- data.frame(Q_matrix, ind=colnames(genotypes))
+K2_bar$ind <- gsub("/media/hdd2tb/popgen/Pilze/PopGen/BAM-Ac/|\\.bam|'|/media/hdd2tb/popgen/Pilze/PopGen/BAM-Fp/|\\.bam|","",Fp_K2_bar$ind) #this data frame has the % likelehood of being assigned to each population
+K2_bar <- pivot_longer(K2_bar, cols = c(V1,V2), names_to = "cluster", values_to ="value")
+
+adm_K2 <- ggplot(FpK2_bar, aes(x=ind, y=value, fill=cluster))+
+ geom_bar(stat = "identity") +
+labs(x = "", y = "Ancetral Proportion") +
+  theme(legend.position = "none", axis.ticks = element_blank(), axis.text.y = element_blank()) +
+  facet_grid(~ count, scales = "free_x", space = "free_x", switch = "x") +
+  # scale_fill_manual(values = bar_cols[1:2]) +
+  scale_fill_manual(values = c("gray", "black")) +
+  theme(axis.text.x = element_blank())+
+  ggtitle("K = 2")
 ```
 admixture proportions on map
 https://bookdown.org/hhwagner1/LandGenCourse_book/WE_9.html
