@@ -51,6 +51,11 @@ plink --vcf quality_filtered_BIALLELIC_SNPS.vcf.gz \
 --make-bed \
 --out biallelic_LD
 ```
+Load into R 
+```
+library(readr)
+ld <- read_table("your_file.ld.gz")
+```
 To calculate LD within populations, we 
 First, we made seperate vcf files for each population. To do this we made .pop population files that contained the names of each sample in a population.
 ```console
