@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --account=plp6235
 #SBATCH --qos=plp6235-b
-#SBATCH --job-name=extract_and_qc
+#SBATCH --job-name=filter_seperate_allsites_snps
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=a.sow@ufl.edu
 #SBATCH --ntasks=1
@@ -46,13 +46,20 @@ vcftools --gzvcf quality_filtered_SNPS.vcf.gz \
 --recode --stdout | bgzip -c > quality_filtered_BIALLELIC_SNPS.vcf.gz
 
 ##Extract ONLY invariant sites
-bcftools view -v snps -i 'AC=0' -Oz -o quality_filtered_INVARIANT.vcf.gz missingness_filtered_ALLSITES.vcf.gz
+gatk SelectVariants \
+  -R ${REF} \
+  -V missingness_filtered_ALLSITES.vcf.gz \
+  --select-type-to-include NO_VARIATION \
+  -O quality_filtered_INVARIANT.vcf.gz
 
-##Index files and combine
+##Index files, combine, and sort
 tabix -p vcf quality_filtered_INVARIANT.vcf.gz
 tabix -p vcf quality_filtered_SNPS.vcf.gz
 
 bcftools concat \
 --allow-overlaps \
 quality_filtered_INVARIANT.vcf.gz quality_filtered_SNPS.vcf.gz \
--O z -o test_filtered.vcf.gz
+-O z -o quality_filtered_ALLSITES.vcf.gz
+
+bcftools sort quality_filtered_ALLSITES.vcf.gz -Oz -o pixy_input_quality_filtered_ALLSITES.vcf.gz
+bcftools index pixy_input_quality_filtered_ALLSITES.vcf.gz
