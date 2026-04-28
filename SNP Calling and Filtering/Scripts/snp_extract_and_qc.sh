@@ -22,5 +22,5 @@ gatk SelectVariants \
 gatk VariantsToTable \
 -R /blue/plp6235/asow/Fomotopsis/ref/fomotopsis_reference.fna \
 -V /blue/plp6235/asow/Fomotopsis/snp_calling/snps/raw_snps.vcf.gz \
--F CHROM -F POS -F QUAL -F QD -F DP -F MQ -F MQRankSum -F FS -F ReadPOSRankSum -F SOR \
+-F CHROM -F POS -F QUAL -F QD -GF DP -F MQ -F MQRankSum -F FS -F ReadPOSRankSum -F SOR \
 -O /blue/plp6235/asow/Fomotopsis/snp_calling/snps/raw_snp_scores.table
