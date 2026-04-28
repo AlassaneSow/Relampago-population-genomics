@@ -54,25 +54,6 @@ done > gvcf_map.txt
 NOTES
 ```console
 [a.sow@login7 jobs]$ gatk CreateSequenceDictionary -R /blue/plp6235/asow/Fomotopsis/ref/fomotopsis_reference.fna
-INFO:    underlay of /etc/localtime required more than 50 (100) bind mounts
-Using GATK jar /gatk/gatk-package-4.6.2.0-local.jar
-Running:
-    java -Dsamjdk.use_async_io_read_samtools=false -Dsamjdk.use_async_io_write_samtools=true -Dsamjdk.use_async_io_write_tribble=false -Dsamjdk.compression_level=2 -jar /gatk/gatk-package-4.6.2.0-local.jar CreateSequenceDictionary -R /blue/plp6235/asow/Fomotopsis/ref/fomotopsis_reference.fna
-Picked up _JAVA_OPTIONS: -Djava.io.tmpdir=/blue/plp6235/asow/Fomotopsis/ref/tmp
-INFO    2026-04-03 14:22:59     CreateSequenceDictionary        Output dictionary will be written in /blue/plp6235/asow/Fomotopsis/ref/fomotopsis_reference.dict
-14:22:59.922 INFO  NativeLibraryLoader - Loading libgkl_compression.so from jar:file:/gatk/gatk-package-4.6.2.0-local.jar!/com/intel/gkl/native/libgkl_compression.so
-[Fri Apr 03 14:22:59 GMT 2026] CreateSequenceDictionary --REFERENCE /blue/plp6235/asow/Fomotopsis/ref/fomotopsis_reference.fna --TRUNCATE_NAMES_AT_WHITESPACE true --NUM_SEQUENCES 2147483647 --VERBOSITY INFO --QUIET false --VALIDATION_STRINGENCY STRICT --COMPRESSION_LEVEL 2 --MAX_RECORDS_IN_RAM 500000 --CREATE_INDEX false --CREATE_MD5_FILE false --help false --version false --showHidden false --USE_JDK_DEFLATER false --USE_JDK_INFLATER false
-[Fri Apr 03 14:23:00 GMT 2026] Executing as a.sow@login7.ufhpc on Linux 5.14.0-503.40.1.el9_5.x86_64 amd64; OpenJDK 64-Bit Server VM 17.0.12+7-Ubuntu-1ubuntu222.04; Deflater: Intel; Inflater: Intel; Provider GCS is available; Picard version: Version:4.6.2.0
-[Fri Apr 03 14:23:00 GMT 2026] picard.sam.CreateSequenceDictionary done. Elapsed time: 0.00 minutes.
-Runtime.totalMemory()=285212672
-To get help, see http://broadinstitute.github.io/picard/index.html#GettingHelp
-picard.PicardException: file:///blue/plp6235/asow/Fomotopsis/ref/fomotopsis_reference.dict already exists.  Delete this file and try again, or specify a different output file.
-        at picard.sam.CreateSequenceDictionary.doWork(CreateSequenceDictionary.java:227)
-        at picard.cmdline.CommandLineProgram.instanceMain(CommandLineProgram.java:281)
-        at org.broadinstitute.hellbender.cmdline.PicardCommandLineProgramExecutor.instanceMain(PicardCommandLineProgramExecutor.java:37)
-        at org.broadinstitute.hellbender.Main.runCommandLineProgram(Main.java:166)
-        at org.broadinstitute.hellbender.Main.mainEntry(Main.java:209)
-        at org.broadinstitute.hellbender.Main.main(Main.java:306)
 [a.sow@login7 jobs]$ ls
 calc_coverage.sh           combine_gvcf_28670586.out  combine_gvcf.sh     mapping_stats_and_filtering.sh  outputs_logs
 combine_gvcf_28667660.out  combine_gvcf_28670713.out  haplotypecaller.sh  map_sam2bam.sh                  trim_reads.sh
@@ -80,7 +61,6 @@ combine_gvcf_28667660.out  combine_gvcf_28670713.out  haplotypecaller.sh  map_sa
 [a.sow@login7 ref]$ ml samtools
 [a.sow@login7 ref]$ samtools faidx /blue/plp6235/asow/Fomotopsis/ref/fomotopsis_reference.fna
 awk '{print $1 ":" 1 "-" $2}' /blue/plp6235/asow/Fomotopsis/ref/fomotopsis_reference.fna.fai > /blue/plp6235/asow/Fomotopsis/ref/genome_intervals.list
-[a.sow@login7 ref]$ nano genome_intervals.list
 ```
 
 ## After calling variants, we preform joint genotyping using ```GenotypeGVCFs``` 
