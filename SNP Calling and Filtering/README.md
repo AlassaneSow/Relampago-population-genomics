@@ -1,11 +1,6 @@
 # Variant calling using the Genome Analysis ToolKit 
 This code was largely based on the methods described by [Treindl et al. 2023](https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2023.1129867/full), [Tremble et al. 2022](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.18521), and notes provided by Dmytro Kryvokhyzha in [GATK: the best practice for genotype calling in a non-model organism](https://evodify.com/gatk-in-non-model-organism/)
 
-### Required Files
-Input - BAM file containing reads   
-Reference - Reference genome 
-### Required Scripts
-HCall.sh
 ## Variant Calling 
 ### First we call variants using ```HaplotypeCaller```    
 
@@ -23,14 +18,7 @@ gatk CreateSequenceDictionary \
    -O /path/to/refernce/reference.dict
 ```
 
-Then we ran ```HaplotypeCaller``` on all the alignments. Each variable is explained below. 
-```console
-REF="/path/to/reference.fna"
-names="/path/to/names.txt"
-OUT="path/to/snp_calling_folder"
-name=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "${names}")
-BAM="/path/to/filtered_assemblies"
-```
+Then we ran ```HaplotypeCaller``` on all the alignments. See **HaplotypeCaller.sh** 
 ```console
 gatk HaplotypeCaller \   
 -R ${REF} \  
@@ -38,7 +26,7 @@ gatk HaplotypeCaller \
 -ERC GVCF \  
 -O $OUT/${SAMPLE}.g.vcf.gz
 ```    
-Then we combinened the gVCF files from HaplotypeCaller into one VCF using ```GenomicsDBImport```  
+Then we combinened the gVCF files from HaplotypeCaller into one VCF using ```GenomicsDBImport```. See **gVCF_to_vcf.sh**
 ```console
 gatk GenomicsDBImport \
 -R /path_to_reference \
@@ -65,7 +53,7 @@ awk '{print $1 ":" 1 "-" $2}' /blue/plp6235/asow/Fomotopsis/ref/fomotopsis_refer
 ```
 
 ## Joint-genotyping
-### After calling variants, we preform joint genotyping using ```GenotypeGVCFs``` 
+### After calling variants, we preform joint genotyping using ```GenotypeGVCFs```. See **joint_genotype.sh**
 ```console
 gatk GenotypeGVCFs \
 -R reference.fasta \
@@ -74,7 +62,7 @@ gatk GenotypeGVCFs \
 -O cohort.vcf.gz
 ```
 ## SNP Filtering
-### Next, we analyze the quality of the SNPs before filtering. 
+### Next, we analyze the quality of the SNPs before filtering. See **snp_extract_and_qc.sh**, **plot_quality.sh**, and **plot_quality.R**
 To do this we first extract just SNPs from the cohort.vcf.gz
 ```console
 gatk SelectVariants \
@@ -92,7 +80,7 @@ gatk VariantsToTable \
 --allowMissingData \
 -o SNP_Scores.table
 ```
-Lastly, we plot the quality metrics in R.
+Lastly, we plot the quality metrics in R. 
 ```r
 library('gridExtra')
 library('ggplot2')
@@ -132,7 +120,7 @@ grid.arrange(QD, DP, FS, MQ, MQRankSum, SOR, ReadPosRankSum, nrow=4)
 dev.off()
 ```
 
-### Now, based on the information above and GATK recommendations, we can use ```VariantFiltration```, ```vcftools```, and  ```bcftools``` to remove low quality SNPs.   
+### Now, based on the information above and GATK recommendations, we can use ```VariantFiltration```, ```vcftools```, and  ```bcftools``` to remove low quality SNPs. See **filter_seperate_filter_combine.sh**
 Please note that because ```pixy``` requires an invariant+variant sites file AND some of the SNP filtering commands remove invariant sites, we have to filter each site type sepratley. In practice this means we have to make SNP-only and an invariant-only files, filter them, and recombine them. We also used the SNP only filtering to make a vcf with only biallelic SNPs for our other analyses (e.g., ADMIXTURE).
 
 ### General filtering
