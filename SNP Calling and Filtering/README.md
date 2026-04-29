@@ -6,7 +6,8 @@ Input - BAM file containing reads
 Reference - Reference genome 
 ### Required Scripts
 HCall.sh
-## First we call variants using ```HaplotypeCaller```    
+## Variant Calling 
+### First we call variants using ```HaplotypeCaller```    
 
 Because ```HaplotypeCaller``` can only handle one sample at a time we need to call each alignment one at a time. To do this we created a list file containing every alignment.   
 ```console
@@ -63,7 +64,8 @@ combine_gvcf_28667660.out  combine_gvcf_28670713.out  haplotypecaller.sh  map_sa
 awk '{print $1 ":" 1 "-" $2}' /blue/plp6235/asow/Fomotopsis/ref/fomotopsis_reference.fna.fai > /blue/plp6235/asow/Fomotopsis/ref/genome_intervals.list
 ```
 
-## After calling variants, we preform joint genotyping using ```GenotypeGVCFs``` 
+## Joint-genotyping
+### After calling variants, we preform joint genotyping using ```GenotypeGVCFs``` 
 ```console
 gatk GenotypeGVCFs \
 -R reference.fasta \
@@ -71,7 +73,8 @@ gatk GenotypeGVCFs \
 --include-non-variant-sites
 -O cohort.vcf.gz
 ```
-## Next, we analyze the quality of the SNPs before filtering. 
+## SNP Filtering
+### Next, we analyze the quality of the SNPs before filtering. 
 To do this we first extract just SNPs from the cohort.vcf.gz
 ```console
 gatk SelectVariants \
@@ -129,7 +132,7 @@ grid.arrange(QD, DP, FS, MQ, MQRankSum, SOR, ReadPosRankSum, nrow=4)
 dev.off()
 ```
 
-## Now, based on the information above and GATK recommendations, we can use ```VariantFiltration```, ```vcftools```, and  ```bcftools``` to remove low quality SNPs.   
+### Now, based on the information above and GATK recommendations, we can use ```VariantFiltration```, ```vcftools```, and  ```bcftools``` to remove low quality SNPs.   
 Please note that because ```pixy``` requires an invariant+variant sites file AND some of the SNP filtering commands remove invariant sites, we have to filter each site type sepratley. In practice this means we have to make SNP-only and an invariant-only files, filter them, and recombine them. We also used the SNP only filtering to make a vcf with only biallelic SNPs for our other analyses (e.g., ADMIXTURE).
 
 ### General filtering
