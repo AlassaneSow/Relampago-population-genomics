@@ -69,3 +69,84 @@ quality_filtered_INVARIANT.vcf.gz quality_filtered_SNPS.vcf.gz \
 
 bcftools sort quality_filtered_ALLSITES.vcf.gz -Oz -o pixy_input_quality_filtered_ALLSITES.vcf.gz
 bcftools index pixy_input_quality_filtered_ALLSITES.vcf.gz
+
+
+#!/bin/bash
+#SBATCH --account=plp6235
+#SBATCH --qos=plp6235-b
+#SBATCH --job-name=filter_seperate_allsites_snps
+#SBATCH --mail-type=END,FAIL
+#SBATCH --mail-user=a.sow@ufl.edu
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=50gb
+#SBATCH --time=30:00:00
+#SBATCH --output=extract_and_qc_%j.out
+pwd; hostname; date
+
+REF="/blue/plp6235/asow/Fomotopsis/ref/fomotopsis_reference.fna"
+RAW="/blue/matthewsmith/a.sow/Sebastian_Data/snps/raw_genotypes.vcf.gz"
+OUT="/blue/matthewsmith/a.sow/Sebastian_Data/snps/filtered_snps"
+
+ml gatk
+ml samtools
+ml vcftools
+ml bcftools 
+
+##Extract ONLY BIALLELIC SNPs and filter them based on quality
+gatk SelectVariants \
+  -R ${REF} \
+  -V ${RAW} \
+  --select-type-to-include SNP \
+  --restrict-alleles-to BIALLELIC \
+  -O ${OUT}/RAW_BIALLELIC_SNPS.vcf.gz
+  
+tabix -p vcf ${OUT}/RAW_BIALLELIC_SNPS.vcf.gz
+
+gatk VariantFiltration \
+-R "${REF}" \
+-V "${OUT}/RAW_BIALLELIC_SNPS.vcf.gz" \
+-O "${OUT}/LABELED_BIALLELIC_SNPS.vcf.gz" \
+--filter-expression "MQ < 40.0" --filter-name MQ \
+--filter-expression "FS > 60.0" --filter-name FS \
+--filter-expression "QD < 2" --filter-name QD
+
+bcftools view -f PASS ${OUT}/LABELED_BIALLELIC_SNPS.vcf.gz -Oz -o ${OUT}/QUAL_FILTERED_BIALLELIC_SNPS.vcf.gz
+
+vcftools --gzvcf ${OUT}/QUAL_FILTERED_BIALLELIC_SNPS.vcf.gz \
+--remove-indels \
+--max-missing 0.95 \
+--min-meanDP 10 \
+--max-meanDP 75 \
+--recode --stdout | bgzip -c > ${OUT}/CLEAN_BIALLELIC_SNPS.vcf.gz
+
+tabix -p vcf ${OUT}/CLEAN_BIALLELIC_SNPS.vcf.gz
+
+##Extract ONLY invariant sites
+gatk SelectVariants \
+  -R ${REF} \
+  -V ${RAW} \
+  --select-type-to-include NO_VARIATION \
+  -O ${OUT}/RAW_INVARIANT.vcf.gz
+  
+vcftools --gzvcf ${OUT}/RAW_INVARIANT.vcf.gz \
+--remove-indels \
+--max-missing 0.95 \
+--min-meanDP 10 \
+--max-meanDP 75 \
+--recode --stdout | bgzip -c > ${OUT}/CLEAN_INVARIANT.vcf.gz
+
+tabix -p vcf ${OUT}/CLEAN_INVARIANT.vcf.gz
+
+##Index files, combine, and sort
+cd ${OUT}
+tabix -p vcf CLEAN_INVARIANT.vcf.gz
+tabix -p vcf CLEAN_BIALLELIC_SNPS.vcf.gz
+
+bcftools concat \
+--allow-overlaps \
+CLEAN_INVARIANT.vcf.gz CLEAN_BIALLELIC_SNPS.vcf.gz \
+-O z -o CLEAN_ALLSITES.vcf.gz
+
+bcftools sort CLEAN_ALLSITES.vcf.gz -Oz -o pixy_input_CLEAN_ALLSITES.vcf.gz
+bcftools index pixy_input_CLEAN_ALLSITES.vcf.gz
