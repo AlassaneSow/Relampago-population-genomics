@@ -32,7 +32,7 @@ tabix -p vcf ${OUT}/CLEAN_ALLSITES.vcf.gz
 ## Extract ONLY BIALLELIC SNPs
 gatk SelectVariants \
   -R ${REF} \
-  -V ${RAW} \
+  -V ${OUT}/CLEAN_ALLSITES.vcf.gz \
   --select-type-to-include SNP \
   --restrict-alleles-to BIALLELIC \
   -O ${OUT}/RAW_BIALLELIC_SNPS.vcf.gz
