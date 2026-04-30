@@ -18,7 +18,8 @@ OUT="/blue/matthewsmith/a.sow/Sebastian_Data/snps/filtered_snps"
 ml gatk
 ml samtools
 ml vcftools
-ml bcftools 
+ml bcftools
+ml plink/1.90b7.2
 
 ## Filter based on depth and missingness #max missing can min DP can be relaxed if needed.
 vcftools --gzvcf ${RAW} \
