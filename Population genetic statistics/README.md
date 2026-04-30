@@ -22,6 +22,9 @@ ColS1  SF
 Fak1  SF
 NATL4  NF
 ```
+Note on how to make
+awk '{print $0 "\tABC"}' samples.txt > samples_pop.txt
+
 ## Identifying highly divergent loci and genes
 To identify highly divergent loci, we calculated F<sub>ST</sub> and d<sub>XY</sub> for each gene in each lineage and we used PCadapt to identify locally adapted loci. We then identified the genes that had SNPs that were the most signifincat in each of these methods.   
 ### F<sub>ST</sub> and d<sub>XY</sub>
