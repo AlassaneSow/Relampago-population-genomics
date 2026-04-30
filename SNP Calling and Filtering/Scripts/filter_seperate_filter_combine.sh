@@ -52,3 +52,16 @@ bcftools index BIALLELIC_SNPS.vcf.gz
 Y=$(bcftools view -H BIALLELIC_SNPS.vcf.gz | wc -l)
 echo "There are $Y BIALLELIC SNPS"
 
+##LD pruning
+##Pruining SNPs with R2 >0.2, in 50 kbp windows, in 10 bp steps.
+plink \
+--vcf BIALLELIC_SNPS.vcf.gz \
+--double-id --allow-extra-chr \
+--set-missing-var-ids @:# \
+--indep-pairwise 50 10 0.2 \
+--out ${OUT}/PRUNED_BIALLELIC_SNPS.vcf.gz
+
+Y=$(bcftools view -H PRUNED_BIALLELIC_SNPS.vcf.gz | wc -l)
+echo "After LD pruning, there are $Y BIALLELIC SNPs"
+
+echo "Use PRUNED_BIALLELIC_SNPS.vcf.gz for ADMIXTURE, NJ, and PCA analyses and demographic modeling. Use pixy_input_CLEAN_ALLSITES.vcf.gz to calculate population summary statistics"
