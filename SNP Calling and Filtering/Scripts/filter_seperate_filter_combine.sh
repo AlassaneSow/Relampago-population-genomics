@@ -45,10 +45,10 @@ cd ${OUT}
 bcftools sort CLEAN_ALLSITES.vcf.gz -Oz -o pixy_input_CLEAN_ALLSITES.vcf.gz
 bcftools index pixy_input_CLEAN_ALLSITES.vcf.gz
 X=$(bcftools view -H pixy_input_CLEAN_ALLSITES.vcf.gz | wc -l)
-echo "There are $X sites in this file"
+echo "There are $X TOTAL sites"
 
 bcftools sort RAW_BIALLELIC_SNPS.vcf.gz -Oz -o BIALLELIC_SNPS.vcf.gz
 bcftools index BIALLELIC_SNPS.vcf.gz
 Y=$(bcftools view -H BIALLELIC_SNPS.vcf.gz | wc -l)
-echo "There are $Y sites in this file"
+echo "There are $Y BIALLELIC SNPS"
 
