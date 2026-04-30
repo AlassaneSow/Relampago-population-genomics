@@ -20,7 +20,7 @@ plink \
 --vcf ${VCF} \
 --double-id --allow-extra-chr \
 --set-missing-var-ids @:# \
---indep-pariwise 50 10 0.2 \
+--indep-pairwise 50 10 0.2 \
 --out ${OUT}
 ```
 We used this otput in our PCA analysis. 
