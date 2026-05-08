@@ -147,7 +147,8 @@ gatk VariantFiltration \
 
 bcftools view -f PASS quality_labeled_SNPS.vcf.gz -Oz -o quality_filtered_SNPS.vcf.gz
 ```
-This data can now be combined with the invariant sites file shown below!  
+This data can now be combined with the invariant sites file as shown below!  
+  
 Most population genetic analyses require bi-allelic SNPs, to retain only bi-allelic SNPs we ran
 ```
 vcftools --gzvcf quality_filtered_SNPS.vcf.gz \
