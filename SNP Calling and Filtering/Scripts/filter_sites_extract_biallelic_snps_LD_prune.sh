@@ -21,9 +21,9 @@ ml vcftools
 ml bcftools
 ml plink/1.90b7.2
 
-## Filter based on depth and missingness #max missing can min DP can be relaxed if needed.
+## Filter based on depth and missingness 
 vcftools --gzvcf ${RAW} \
---max-missing 0.95 \
+--max-missing 0.75 \
 --min-meanDP 10 \
 --max-meanDP 75 \
 --recode --stdout | bgzip -c > ${OUT}/CLEAN_ALLSITES.vcf.gz
@@ -38,7 +38,7 @@ gatk SelectVariants \
   --restrict-alleles-to BIALLELIC \
   -O ${OUT}/RAW_BIALLELIC_SNPS.vcf.gz
 
-##Index files, combine, and sort
+##Index files and sort
 cd ${OUT}
 #tabix -p vcf CLEAN_ALLSITES.vcf.gz
 #tabix -p vcf RAW_BIALLELIC_SNPS.vcf.gz
@@ -51,36 +51,16 @@ echo "There are $X TOTAL sites"
 bcftools sort RAW_BIALLELIC_SNPS.vcf.gz -Oz -o BIALLELIC_SNPS.vcf.gz
 bcftools index BIALLELIC_SNPS.vcf.gz
 Y=$(bcftools view -H BIALLELIC_SNPS.vcf.gz | wc -l)
-echo "There are $Y BIALLELIC SNPS"
+echo " Prior to LD pruning, there are $Y BIALLELIC SNPs"
 
 ##LD pruning
-##Mark SNPs with R2 >0.2, in 50 kbp windows, in 10 bp steps.
+##Pruining SNPs with R2 >0.2, in 50 kbp windows, in 10 bp steps.
 plink \
 --vcf BIALLELIC_SNPS.vcf.gz \
 --double-id --allow-extra-chr \
 --set-missing-var-ids @:# \
 --indep-pairwise 50 10 0.2 \
---out MARKED_BIALLELIC_SNPS.vcf.gz
-
-#remove pruned SNPs
-plink \
---vcf BIALLELIC_SNPS.vcf.gz \
---double-id --allow-extra-chr \
---set-missing-var-ids @:# \
---extract MARKED_BIALLELIC_SNPS.vcf.gz.prune.in \
---recode vcf bgz \
---out PRUNED_BIALLELIC_SNPS
-
-bcftools index PRUNED_BIALLELIC_SNPS.vcf.gz
+--out ${OUT}/PRUNED_BIALLELIC_SNPS.vcf.gz
 
 Y=$(bcftools view -H PRUNED_BIALLELIC_SNPS.vcf.gz | wc -l)
-echo "After LD pruning, there are $Y BIALLELIC SNPs"
-
-echo "Use PRUNED_BIALLELIC_SNPS.vcf.gz for ADMIXTURE, NJ, and PCA analyses and demographic modeling. Use pixy_input_CLEAN_ALLSITES.vcf.gz to calculate population summary statistics"
-
-
-
-
-
-
-
+echo " After LD pruning, there are $Y BIALLELIC SNPs"
