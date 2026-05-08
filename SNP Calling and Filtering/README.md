@@ -40,15 +40,11 @@ for f in *.g.vcf.gz; do
     echo -e "${sample}\t$(pwd)/${f}"
 done > gvcf_map.txt
 ```
-NOTES
+Index the reference genome and get genomic intervals
 ```console
-[a.sow@login7 jobs]$ gatk CreateSequenceDictionary -R /blue/plp6235/asow/Fomotopsis/ref/fomotopsis_reference.fna
-[a.sow@login7 jobs]$ ls
-calc_coverage.sh           combine_gvcf_28670586.out  combine_gvcf.sh     mapping_stats_and_filtering.sh  outputs_logs
-combine_gvcf_28667660.out  combine_gvcf_28670713.out  haplotypecaller.sh  map_sam2bam.sh                  trim_reads.sh
-[a.sow@login7 jobs]$ cd /blue/plp6235/asow/Fomotopsis/ref/
-[a.sow@login7 ref]$ ml samtools
-[a.sow@login7 ref]$ samtools faidx /blue/plp6235/asow/Fomotopsis/ref/fomotopsis_reference.fna
+gatk CreateSequenceDictionary -R /blue/plp6235/asow/Fomotopsis/ref/fomotopsis_reference.fna
+
+samtools faidx /blue/plp6235/asow/Fomotopsis/ref/fomotopsis_reference.fna
 awk '{print $1 ":" 1 "-" $2}' /blue/plp6235/asow/Fomotopsis/ref/fomotopsis_reference.fna.fai > /blue/plp6235/asow/Fomotopsis/ref/genome_intervals.list
 ```
 
