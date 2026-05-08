@@ -117,9 +117,9 @@ dev.off()
 ```
 
 ### Now, based on the information above and GATK recommendations, we can use ```VariantFiltration```, ```vcftools```, and  ```bcftools``` to remove low quality SNPs. See **filter_seperate_filter_combine.sh**
-Please note that because ```pixy``` requires an invariant+variant sites file AND some of the SNP filtering commands remove invariant sites, we have to filter each site type sepratley. In practice this means we have to make SNP-only and an invariant-only files, filter them, and recombine them. We also used the SNP only filtering to make a vcf with only biallelic SNPs for our other analyses (e.g., ADMIXTURE).
+Please note that because ```pixy``` requires an invariant+variant sites file AND some of the SNP filtering commands (e.g., MQ and QD) remove invariant sites, we would have to filter each site type sepratley. Also the GATK reccommended filters are rather strict and given that the quality of the SNPs are reasonably good, we chose to filter only based on missingness and depth. 
 
-### General filtering
+### Missingness and depth filters
 ```console
 vcftools --gzvcf my_vcf.vcf.gz \
 --remove-indels \
@@ -128,75 +128,38 @@ vcftools --gzvcf my_vcf.vcf.gz \
 --max-meanDP 75 \
 --recode --stdout | bgzip -c > missingness_filtered_ALLSITES.vcf.gz
 ```
-### Filtering **SNPs ONLY**
+### Extracting **BIALLELIC SNPs** 
 We extract just the SNPs using vcftools
-```console
-vcftools --gzvcf missingness_filtered_ALLSITES.vcf.gz \
---mac 1 \
---recode --stdout | bgzip -c > missingness_filtered_SNPS.vcf.gz
-```
-And then filter them using ```VariantFiltration```
-```console
-gatk VariantFiltration \
--R ${REF} \
--V missingness_filtered_SNPS.vcf.gz \
--O quality_labeled_SNPS.vcf.gz \
---filter "MQ < 40.0" --filter-name "MQ" \
---filter "FS > 60.0" --filter-name "FS" \
---filter "QD < 2" --filter-name "QD"
-
-bcftools view -f PASS quality_labeled_SNPS.vcf.gz -Oz -o quality_filtered_SNPS.vcf.gz
-```
-This data can now be combined with the invariant sites file as shown below!  
-  
-Most population genetic analyses require bi-allelic SNPs, to retain only bi-allelic SNPs we ran
-```
-vcftools --gzvcf quality_filtered_SNPS.vcf.gz \
---min-alleles 2 \
---max-alleles 2 \
---recode --stdout | bgzip -c > quality_filtered_BIALLELIC_SNPS.vcf.gz
-```
-Optional removal of non-chromosomal sites. Run
-```console
-bcftools view \
--r Chr1,Chr2..... \
-filtered_SNPS.vcf.gz -Oz -o nuclear_filtered_SNPS.vcf.gz #In the command above you can use -R and give a list of chromosome names rather than typing them out.
-```
-We started with X SNPs
-```console
-grep -vc "^#" missingness_filtered_SNPS.vcf.gz
-```
-X SNPs are included in our PIXY analysis
-```console
-grep -vc "^#" quality_filtered_SNPS.vcf.gz
-```
-and there are X high-quality bi-allelic SNPs
-```console
-grep -vc "^#" quality_filtered_BIALLELIC_SNPS.vcf.gz
-```
-
-### Filtering **invariant sites**
-Because 1) the quality filters used in the SNP section do not apply to invariant sites and 2) we already removed sites with missing data or low/high depth we simply extract invariant sites from the vcf and combine with the filtered SNPs.
 ```console
 gatk SelectVariants \
   -R ${REF} \
-  -V missingness_filtered_ALLSITES.vcf.gz \
-  --select-type-to-include NO_VARIATION \
-  -O quality_filtered_INVARIANT.vcf.gz
+  -V ${OUT}/CLEAN_ALLSITES.vcf.gz \
+  --select-type-to-include SNP \
+  --restrict-alleles-to BIALLELIC \
+  -O ${OUT}/RAW_BIALLELIC_SNPS.vcf.gz
 ```
-### Combine, index, and sort files
+### LD pruning biallelic SNPs
 ```console
-tabix -p vcf quality_filtered_INVARIANT.vcf.gz
-tabix -p vcf quality_filtered_SNPS.vcf.gz
-
-bcftools concat \
---allow-overlaps \
-quality_filtered_INVARIANT.vcf.gz quality_filtered_SNPS.vcf.gz \
--O z -o quality_filtered_ALLSITES.vcf.gz
-
-bcftools sort quality_filtered_ALLSITES.vcf.gz -Oz -o pixy_input_quality_filtered_ALLSITES.vcf.gz
-bcftools index pixy_input_quality_filtered_ALLSITES.vcf.gz
+plink \
+--vcf BIALLELIC_SNPS.vcf.gz \
+--double-id --allow-extra-chr \
+--set-missing-var-ids @:# \
+--indep-pairwise 50 10 0.2 \
+--out ${OUT}/PRUNED_BIALLELIC_SNPS.vcf.gz
 ```
+We started with X biallelic SNPs
+```console
+bcftools view -H RAW_BIALLELIC_SNPS.vcf.gz | wc -l
+```
+X sites are included in our PIXY analysis
+```console
+bcftools view -H pixy_input_CLEAN_ALLSITES.vcf.gz | wc -l
+```
+and there are X LD pruned bi-allelic SNPs
+```console
+bcftools view -H PRUNED_BIALLELIC_SNPS.vcf.gz | wc -l
+```
+
 ## Now we have a file containing bi-allelic SNPs that we can use for ADMIXTURE and PCA and a file with invariant+variant sites for PIXY. With this data we first [linkage-disequillibrium pruned](/Linkage%20Disequilibrium/README.md) the SNPs before analyzing the [population strucutre](/Population%20Structure/Population%20Structure.md) of _Parvodontia relampaga_. 
 
 
