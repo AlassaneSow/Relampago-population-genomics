@@ -22,9 +22,36 @@ ColS1  SF
 Fak1  SF
 NATL4  NF
 ```
-Note on how to make
+Note on how to make poipulations coloumn
 awk '{print $0 "\tABC"}' samples.txt > samples_pop.txt
+To calculate avergare genome wide statistics we used R
+```r
+mean(pi$avg_pi, na.rm=TRUE)
+```
+## Plotting statistics
+We used R to plot each summary statisitc across the largest contig
+```r
+library(ggplot2)
+library(tidyverse)
+pi <- read.table("pixy_pi.txt", header = TRUE)
 
+#Find contig lenghts
+contig_lengths <- pi %>% #calculate contig lengths
+  group_by(chromosome) %>%
+  summarise(contig_length = max(window_pos_2), .groups = "drop")
+#merge dfs
+pi_plot <- pi %>%
+  left_join(contig_lengths, by = "chromosome")
+#plot largest contig
+pi %>%
+  filter(chromosome == "MPVS01000002.1") %>%
+  mutate(chr_position = ((window_pos_1 + window_pos_2)/2)/10000)%>% # the last number has to be the window size we chose in pixy
+  ggplot(aes(x=chr_position, y=avg_pi))+
+  geom_point(size=0.5)+
+  ylim(c(0, 0.03))+
+  xlab("Position on Contig (Mb)")+
+  ylab(expression("Nucleotide Diversity (" * pi * ")"))
+```
 ## Identifying highly divergent loci and genes
 To identify highly divergent loci, we calculated F<sub>ST</sub> and d<sub>XY</sub> for each gene in each lineage and we used PCadapt to identify locally adapted loci. We then identified the genes that had SNPs that were the most signifincat in each of these methods.   
 ### F<sub>ST</sub> and d<sub>XY</sub>
