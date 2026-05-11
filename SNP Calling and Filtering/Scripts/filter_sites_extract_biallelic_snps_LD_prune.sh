@@ -64,3 +64,23 @@ plink \
 
 Y=$(bcftools view -H PRUNED_BIALLELIC_SNPS.vcf.gz | wc -l)
 echo " After LD pruning, there are $Y BIALLELIC SNPs"
+
+#mark linked SNPs
+plink \
+--vcf BIALLELIC_SNPS.vcf.gz \
+--double-id --allow-extra-chr \
+--set-missing-var-ids @:# \
+--indep-pairwise 50 10 0.2 \
+--out /blue/matthewsmith/a.sow/Sebastian_Data/snps/filtered_snps/PRUNED_BIALLELIC_SNPS.vcf.gz
+
+#remove pruned SNPs
+plink \
+--vcf BIALLELIC_SNPS.vcf.gz \
+--double-id --allow-extra-chr \
+--set-missing-var-ids @:# \
+--extract PRUNED_BIALLELIC_SNPS.vcf.gz.prune.in \
+--recode vcf bgz \
+--out LD_PRUNED_BIALLELIC_SNPS
+
+Y=$(bcftools view -H /blue/matthewsmith/a.sow/Sebastian_Data/snps/filtered_snps/LD_PRUNED_BIALLELIC_SNPS.vcf.gz | wc -l)
+echo "After LD pruning, there are $Y BIALLELIC SNPs"
