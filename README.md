@@ -17,3 +17,6 @@ Extract sample names from vcf like so
 ```console
 bcftools query -l CLEAN_ALLSITES.vcf.gz > samples.txt
 ```
+
+# Demographic modeling
+https://speciationgenomics.github.io/fastsimcoal2/
