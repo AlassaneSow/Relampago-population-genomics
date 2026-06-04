@@ -1,7 +1,5 @@
 # Relampago population genomics
-[![BioProject](https://img.shields.io/badge/BioProject-PRJNAXXXXX-a03)]([https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1400107/](https://github.com/AlassaneSow/Relampago-population-genomics/edit/main/README.md))  
-[![SRA](https://img.shields.io/badge/Raw_Reads-SRRXXXXX-a03)]([https://www.ncbi.nlm.nih.gov/sra/SRX31740809[accn]](https://github.com/AlassaneSow/Relampago-population-genomics/edit/main/README.md)) 
-[![Mito](https://img.shields.io/badge/Mito_Genome-PXXXXXX-a03)]([https://www.ncbi.nlm.nih.gov/nuccore/PX891014.1](https://github.com/AlassaneSow/Relampago-population-genomics/edit/main/README.md))
+[![BioProject](https://img.shields.io/badge/BioProject-PRJNAXXXXX-a03)]([https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1400107/](https://github.com/AlassaneSow/Relampago-population-genomics/edit/main/README.md)) [![SRA](https://img.shields.io/badge/Raw_Reads-SRRXXXXX-a03)]([https://www.ncbi.nlm.nih.gov/sra/SRX31740809[accn]](https://github.com/AlassaneSow/Relampago-population-genomics/edit/main/README.md)) [![Mito](https://img.shields.io/badge/Mito_Genome-PXXXXXX-a03)]([https://www.ncbi.nlm.nih.gov/nuccore/PX891014.1](https://github.com/AlassaneSow/Relampago-population-genomics/edit/main/README.md))
 
 This repository contains code and supplementary information used for the analysis of the population structure, ecology, and evolution of  _Parvodontia relampaga_. Each folder represents one major step of the analysis and in each folder you will find:
   1) A README that contains notes, supplementary figures, and summarises the commands/programs used, my thought process behind using them, and occasional trouble shooting information
