@@ -1,8 +1,8 @@
 # Relampago population genomics
 [![BioProject](https://img.shields.io/badge/BioProject-PRJNAXXXXX-purple)](https://github.com/AlassaneSow/Relampago-population-genomics/main/README.md)  
-[![SRA](https://img.shields.io/badge/BioProject-PRJNAXXXXX-purple)](https://github.com/AlassaneSow/Relampago-population-genomics/main/README.md)  
-[![Reference Genome](https://img.shields.io/badge/BioProject-PRJNAXXXXX-purple)](https://github.com/AlassaneSow/Relampago-population-genomics/main/README.md)  
-[![Reference Genome Mitochondria](https://img.shields.io/badge/BioProject-PRJNAXXXXX-purple)](https://github.com/AlassaneSow/Relampago-population-genomics/main/README.md)  
+[![SRA](https://img.shields.io/badge/SRA-PRJNAXXXXX-purple)](https://github.com/AlassaneSow/Relampago-population-genomics/main/README.md)  
+[![Reference Genome](https://img.shields.io/badge/Reference_Genome-PRJNAXXXXX-purple)](https://github.com/AlassaneSow/Relampago-population-genomics/main/README.md)  
+[![Reference Mitochondrial Genome](https://img.shields.io/badge/Reference_Mitochondrial_Genome-PRJNAXXXXX-purple)](https://github.com/AlassaneSow/Relampago-population-genomics/main/README.md)  
 
 
 This repository contains code and supplementary information used for the analysis of the population structure, ecology, and evolution of  _Parvodontia relampaga_. Each folder represents one major step of the analysis and in each folder you will find:
