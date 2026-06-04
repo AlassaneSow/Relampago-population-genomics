@@ -1,5 +1,7 @@
-# Genome assembly 
-We used COMPANY Illlumina HiSeq4000 platform to sequence 50X coverage whole genomes. This code is largley based on the work in [Treindl et al. 2023](https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2023.1129867/full)
+# Genome assembly  
+[![BioProject](https://img.shields.io/badge/BioProject-PRJNAXXXXX-purple)](https://github.com/AlassaneSow/Relampago-population-genomics/main/README.md)  [![SRA](https://img.shields.io/badge/BioProject-PRJNAXXXXX-purple)](https://github.com/AlassaneSow/Relampago-population-genomics/main/README.md)  
+
+We used COMPANY Illlumina HiSeq4000 platform to sequence 50X coverage whole genomes. This code is largley based on the work in [Treindl et al. 2023](https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2023.1129867/full). The raw reads and assmebled genomes are available in the links above. 
 ## First we checked the sequencing quality using ```fastqc```  
 ```console
 fastqc path/to/fastq.gz -o path/to/output/
