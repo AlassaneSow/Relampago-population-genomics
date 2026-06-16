@@ -52,6 +52,17 @@ pi %>%
   xlab("Position on Contig (Mb)")+
   ylab(expression("Nucleotide Diversity (" * pi * ")"))
 ```
+We also created histograms of Taijam's D across all samples and within populations.
+```r
+#Plot all samples
+ggplot(pi, aes(avg_pi))+
+  geom_histogram(bins=500)+
+  xlim(c(0,0.1))
+#Plot per population and across all samples
+ggplot(pi, aes(avg_pi)) +
+geom_histogram(data=subset(pi, population=='a'), fill="purple", alpha=0.5)+
+geom_histogram(data=subset(pi, population=='a'), fill="purple", alpha=0.5)
+```
 ## Identifying highly divergent loci and genes
 To identify highly divergent loci, we calculated F<sub>ST</sub> and d<sub>XY</sub> for each gene in each lineage and we used PCadapt to identify locally adapted loci. We then identified the genes that had SNPs that were the most signifincat in each of these methods.   
 ### F<sub>ST</sub> and d<sub>XY</sub>
