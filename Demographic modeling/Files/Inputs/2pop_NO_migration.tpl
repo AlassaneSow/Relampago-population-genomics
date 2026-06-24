@@ -10,10 +10,7 @@ NPOP2$
 0
 0
 //Number of migration matrices : If 0 : No migration between demes: NoMig estimates the migration rates between populations
-1
-//NoMig matrix 1 :
-0.000 MIG0-1$ 
-MIG1-0$ 0.000
+0
 //Historical event-This estimates when the populations were isolated the identity of the source or sink does not matter here: time (in gen), source, sink, proportion of migrants, new deme size, new growth rate, new migration matrix. Below models the movement of 100% of lineages in pop0 to pop1 and estimates the number of generations since this happened
 1 historical event
 T_DIV$ 0 1 1 1 0 keep
