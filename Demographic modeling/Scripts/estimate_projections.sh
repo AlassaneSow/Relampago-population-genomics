@@ -13,6 +13,7 @@ pwd; hostname; date
 
 VCF="/blue/matthewsmith/a.sow/Sebastian_Data/snps/filtered_snps/LD_PRUNED_BIALLELIC_SNPS.vcf.gz"
 OUT="/blue/matthewsmith/a.sow/Sebastian_Data/demographic_modelling/"
+POP="/blue/matthewsmith/a.sow/Sebastian_Data/snps/filtered_snps/samples_pop.txt"
 ml easysfs
 cd ${OUT}
 easysfs -i ${VCF} -p populations.txt -a -f --preview
