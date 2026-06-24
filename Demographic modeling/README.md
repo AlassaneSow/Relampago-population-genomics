@@ -7,6 +7,8 @@ Although the vcf contains very high quality SNPs, ```easysfs``` can not use miss
 ```console
 # estimate the best projections
 easSFS -i ${VCF} -p ${POP} -a -f --preview
-# then create SFS files
 ```
-
+The output looks like this. Look out for where the number of segregating sites sharply decreases, this will be the number we choose for the --proj flag. THe proj flag lists the number of individuals in both populations. Because we filtered for missing data and removed poorly assembles isolates, we do not have to downsample.
+Create SFS files
+```
+```
