@@ -16,4 +16,4 @@ OUT="/blue/matthewsmith/a.sow/Sebastian_Data/demographic_modelling/"
 POP="/blue/matthewsmith/a.sow/Sebastian_Data/snps/filtered_snps/samples_pop.txt"
 ml easysfs
 cd ${OUT}
-easysfs -i ${VCF} -p populations.txt -a -f --preview
+easysfs -i ${VCF} -p ${POP} -a -f --preview
