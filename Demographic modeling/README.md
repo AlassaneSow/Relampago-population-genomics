@@ -1,3 +1,4 @@
+# NEED TO ADD A NULL MODEL SCENARIO WHERIN NO MIGRATION AND NO CHANGE IN POPULATION SIZE IS EVALUATED
 # Demographic modeling using fastsimcoal2
 This code is based on the [Speciation & Population Genomics: a how-to-guide](https://speciationgenomics.github.io/fastsimcoal2/), the [fastsimcoal2 manual](https://cmpg.unibe.ch/software/fastsimcoal2/man/fastsimcoal28.pdf), and methods used by Tremble et al. [2022](https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.18521).
 ## Preparing data
