@@ -1,6 +1,6 @@
 [PARAMETERS]
 //#isInt? #name #dist. #min #max
 //all N are in number of haploid individuals
-1 NPOP1$ logunif 100 1e5 output
-1 NPOP2$ logunif 100 1e5 output
-1 T_DIV$ logunif 1000 1000000 output
+1 NPOP1 logunif 100 1e5 output
+1 NPOP2 logunif 100 1e5 output
+1 T_DIV logunif 1000 1000000 output
