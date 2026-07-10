@@ -21,7 +21,7 @@ MIG1-0$ 0.000
 3 historical events
 T_MIGSTOP$ 0 0 1 1 0 0
 T_MIGSTART$ 0 0 1 1 0 1
-T_DIV$ 0 1 1 1 0 keep
+T_DIV$ 0 1 1 NANC$ 0 keep
 //Number of independent (unlinked) chromosomes, and "chromosome structure" flag:  0 for identical structure across chromosomes, and 1 for different structures on different chromosomes.
 1 0
 //Number of contiguous linkage blocks in chromosome 1:
