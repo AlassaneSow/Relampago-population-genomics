@@ -8,5 +8,6 @@
 1 T_MIGSTOP logunif 1 1e5 output
 1 T_MIGSTART logunif 1 1e5 output
 1 T_DIV logunif 10 1e5 output
+1 NANC logunif 10 1e5 output
 [RULES]
 T_MIGSTOP < T_MIGSTART < T_DIV
