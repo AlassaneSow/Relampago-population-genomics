@@ -1,0 +1,5 @@
+[PARAMETERS]
+//#isInt? #name #dist. #min #max
+//all N are in number of haploid individuals
+1 N_1$ logunif 100 10000 output
+1 T_DIV$ logunif 1000 1000000 output
