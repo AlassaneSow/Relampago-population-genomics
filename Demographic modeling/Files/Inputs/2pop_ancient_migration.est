@@ -1,0 +1,11 @@
+[PARAMETERS]
+//#isInt? #name #dist. #min #max
+//all N are in number of haploid individuals
+1 NPOP1$ logunif 10 1e5 output
+1 NPOP2$ logunif 10 1e5 output
+1 MIG0-1$ logunif 1 1e5 output
+1 MIG1-0$ logunif 1 1e5 output
+1 T_INTRO$ logunif 1 1e5 output
+1 T_DIV$ logunif 10 1000000 output
+[RULES]
+T_STOP$ < T_DIV$
